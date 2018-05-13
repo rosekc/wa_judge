@@ -10,10 +10,6 @@ import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [CommonModule, HomeRoutingModule, SharedModule],
-  declarations: [
-    HomeComponent,
-    LoginComponent,
-    PageNotFoundComponent,
-  ]
+  declarations: [HomeComponent, LoginComponent, PageNotFoundComponent]
 })
 export class HomeModule {}
