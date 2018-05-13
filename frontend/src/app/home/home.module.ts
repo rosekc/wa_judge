@@ -5,7 +5,6 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { WelcomeComponent } from './welcome/welcome.component';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -15,7 +14,6 @@ import { SharedModule } from '../shared/shared.module';
     HomeComponent,
     LoginComponent,
     PageNotFoundComponent,
-    WelcomeComponent
   ]
 })
 export class HomeModule {}

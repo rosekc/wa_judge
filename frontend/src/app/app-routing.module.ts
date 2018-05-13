@@ -1,10 +1,32 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './core/auth/auth.guard';
+import { UserType } from './core/auth/user-type.enum';
 
 const routes: Routes = [
   {
+    path: 'student',
+    loadChildren: './student/student.module#StudentModule',
+    canLoad: [AuthGuard],
+    data: { userType: UserType.student }
+  },
+  {
+    path: 'teacher',
+    loadChildren: './teacher/teacher.module#TeacherModule',
+    canLoad: [AuthGuard],
+    data: { userType: UserType.teacher }
+  },
+  {
+    path: 'admin',
+    loadChildren: './admin/admin.module#AdminModule',
+    canLoad: [AuthGuard],
+    data: { userType: UserType.admin }
+  },
+  {
     path: '',
-    loadChildren: './home/home.module#HomeModule'
+    loadChildren: './home/home.module#HomeModule',
+    canLoad: [AuthGuard],
+    data: { userType: undefined }
   },
   { path: '**', redirectTo: '/404' }
 ];
