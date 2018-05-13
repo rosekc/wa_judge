@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 
 import { AuthModule } from './auth.module';
-import { User } from './user.model';
+import { User, Users } from './user.model';
 import { UserType } from './user-type.enum';
 
 @Injectable({
@@ -16,13 +16,21 @@ export class AuthService {
   redirectUrl: string;
   constructor() {}
 
-  login(): Observable<boolean> {
-    return of(true).pipe(
+  login({ email, pass }: { email: string; pass: string }): Observable<boolean> {
+    const user = Users.find((x: User) => x.email === email);
+    let flag = false;
+    if (user && user.email[0] === pass) {
+      flag = true;
+    }
+
+    return of(flag).pipe(
       delay(1000),
       tap(val => {
-        this.isLoggedIn = true;
-        this.user = new User(1, 'test', UserType.student);
-        this.goLogin();
+        this.isLoggedIn = val;
+        this.user = user;
+        if (val) {
+          this.goLogin();
+        }
       })
     );
   }
