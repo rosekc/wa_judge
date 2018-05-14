@@ -6,7 +6,8 @@ from sqlalchemy import and_, or_
 
 from .. import db, ma
 from ..models import User
-from .errors import conflict, not_found, unprocessable_entity
+from ..utils.decorator import need_args
+from ..utils.errors import conflict, not_found, unprocessable_entity
 
 auth = HTTPBasicAuth()
 
@@ -46,11 +47,8 @@ class UserApi(Resource):
     user_schema = UserSchema()
     can_modify = ('password')
 
+    @need_args('user_id')
     def get(self, user_id=None):
-        if user_id is None:
-            user_id = request.args.get('user_id', None, type=int)
-        if user_id is None:
-            return unprocessable_entity('user_id is required.')
         user = User.query.filter_by(id=user_id).first()
         if user is None:
             return not_found('user not found.')
