@@ -31,14 +31,19 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
 
   checkLogin(url: string | undefined, userType: UserType | undefined): boolean {
+    if (url === '/404') {
+      return true;
+    }
+
     if (this.authService.isLoggedIn) {
       if (this.authService.user.userType !== userType) {
         this.router.navigate([this.authService.redirectUrl]);
+        return true;
       }
       return true;
     }
 
-    if (url === '/' || url === '/404') {
+    if (url === '/') {
       return true;
     }
 

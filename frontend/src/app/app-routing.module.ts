@@ -25,7 +25,6 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: './home/home.module#HomeModule',
-    canLoad: [AuthGuard],
     data: { userType: undefined }
   },
   { path: '**', redirectTo: '/404' }

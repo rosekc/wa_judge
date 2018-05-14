@@ -14,7 +14,14 @@ export class AuthService {
   isLoggedIn = false;
 
   redirectUrl: string;
-  constructor() {}
+  constructor() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      this.user = Users.find((x: User) => x.email === token);
+      this.isLoggedIn = true;
+      this.resetRedirectUrl();
+    }
+  }
 
   login({ email, pass }: { email: string; pass: string }): Observable<boolean> {
     const user = Users.find((x: User) => x.email === email);
@@ -29,7 +36,8 @@ export class AuthService {
         this.isLoggedIn = val;
         this.user = user;
         if (val) {
-          this.goLogin();
+          localStorage.setItem('access_token', user.email);
+          this.resetRedirectUrl();
         }
       })
     );
@@ -38,21 +46,28 @@ export class AuthService {
   logout(): void {
     this.isLoggedIn = false;
     this.user = undefined;
+    this.resetRedirectUrl();
+    localStorage.removeItem('access_token');
   }
 
-  private goLogin(): void {
-    switch (this.user.userType) {
-      case UserType.admin:
-        this.redirectUrl = '/admin';
-        break;
-      case UserType.student:
-        this.redirectUrl = '/student';
-        break;
-      case UserType.teacher:
-        this.redirectUrl = '/teacher';
-        break;
-      default:
-        break;
+  private resetRedirectUrl(): void {
+    if (this.user === undefined) {
+      this.redirectUrl = '/';
+    } else {
+      switch (this.user.userType) {
+        case UserType.admin:
+          this.redirectUrl = '/admin';
+          break;
+        case UserType.student:
+          this.redirectUrl = '/student';
+          break;
+        case UserType.teacher:
+          this.redirectUrl = '/teacher';
+          break;
+        default:
+          this.redirectUrl = '/';
+          break;
+      }
     }
   }
 }
