@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { MatButton } from '@angular/material';
 
 @Component({
   selector: 'app-page-not-found',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./page-not-found.component.css']
 })
 export class PageNotFoundComponent implements OnInit {
-
-  constructor() { }
+  @ViewChild('backBtn') backBtn: MatButton;
+  constructor(private location: Location) {}
 
   ngOnInit() {
+    this.backBtn.focus();
   }
 
+  goBack() {
+    this.location.back();
+  }
 }
