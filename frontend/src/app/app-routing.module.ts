@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/auth/auth.guard';
 import { UserType } from './core/auth/user-type.enum';
+import { TestGuard } from './test/test.guard';
 
 const routes: Routes = [
   {
@@ -21,6 +22,11 @@ const routes: Routes = [
     loadChildren: './admin/admin.module#AdminModule',
     canLoad: [AuthGuard],
     data: { userType: UserType.admin }
+  },
+  {
+    path: 'test',
+    loadChildren: './test/test.module#TestModule',
+    canLoad: [TestGuard]
   },
   {
     path: '',
