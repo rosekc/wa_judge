@@ -7,11 +7,7 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    SharedModule
-  ],
+  imports: [CommonModule, AdminRoutingModule, SharedModule],
   declarations: [AdminComponent]
 })
-export class AdminModule { }
+export class AdminModule {}

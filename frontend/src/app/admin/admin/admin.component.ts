@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../core/auth/auth.service';
+import { NavItem } from '../../shared/head/nav-item';
 
 @Component({
   selector: 'app-admin',
@@ -9,12 +9,12 @@ import { AuthService } from '../../core/auth/auth.service';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  navItems: NavItem[] = [
+    new NavItem('考试', '/teacher/exam'),
+    new NavItem('设置', '/teacher/settings')
+  ];
+
+  constructor() {}
 
   ngOnInit() {}
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
 }

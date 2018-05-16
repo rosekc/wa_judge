@@ -1,4 +1,8 @@
-<p>
-  teacher works!
-</p>
-<button mat-raised-button color="primary" (click)="logout()">注销</button>
+<div class="container mat-elevation-z3">
+  <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="0px">
+    <app-head [navItems]="navItems" fxFlexFill></app-head>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
