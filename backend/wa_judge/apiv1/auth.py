@@ -6,7 +6,7 @@ from sqlalchemy import and_, or_
 
 from .. import db, ma
 from ..models import User
-from ..utils.decorator import need_args
+from ..utils.decorator import get_args
 from ..utils.errors import conflict, not_found, unprocessable_entity
 
 auth = HTTPBasicAuth()
@@ -47,7 +47,7 @@ class UserApi(Resource):
     user_schema = UserSchema()
     can_modify = ('password')
 
-    @need_args('user_id')
+    @get_args('user_id')
     def get(self, user_id=None):
         user = User.query.filter_by(id=user_id).first()
         if user is None:
