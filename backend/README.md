@@ -1,7 +1,8 @@
-# wa_blog backend
+# wa_judge backend
 
 ## Usage
 ```cmd
+pip install pipenv
 pipenv install
 pipenv shell
 set FLASK_APP=wa_judge
