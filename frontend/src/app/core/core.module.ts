@@ -4,10 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthModule } from './auth/auth.module';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  HttpClientInMemoryWebApiModule,
-  InMemoryBackendConfigArgs
-} from 'angular-in-memory-web-api';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data-service';
 
 @NgModule({

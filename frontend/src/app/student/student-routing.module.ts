@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../core/auth/auth.guard';
-import { ExamsComponent } from './exams/exams.component';
+import { ExamListComponent } from './exam/exam-list/exam-list.component';
+import { ExamDetailComponent } from './exam/exam-detail/exam-detail.component';
 import { StudentComponent } from './student/student.component';
 
 const routes: Routes = [
@@ -11,8 +12,9 @@ const routes: Routes = [
     component: StudentComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'exams', pathMatch: 'full' },
-      { path: 'exams', component: ExamsComponent }
+      { path: '', redirectTo: 'exam', pathMatch: 'full' },
+      { path: 'exam', component: ExamListComponent },
+      { path: 'exam/:id', component: ExamDetailComponent }
     ]
   }
 ];
