@@ -4,12 +4,25 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   MatButtonModule,
   MatDialogModule,
-  MatInputModule
+  MatInputModule,
+  MatPaginatorModule,
+  MatProgressSpinnerModule,
+  MatSortModule,
+  MatTableModule
 } from '@angular/material';
 
 @NgModule({
   imports: [CommonModule],
-  exports: [FlexLayoutModule, MatButtonModule, MatDialogModule, MatInputModule],
+  exports: [
+    FlexLayoutModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule
+  ],
   declarations: []
 })
 export class MaterialViewModule {}

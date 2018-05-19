@@ -10,7 +10,7 @@ import { NavItem } from '../../shared/head/nav-item';
 })
 export class StudentComponent implements OnInit {
   navItems: NavItem[] = [
-    new NavItem('考试', '/student/exam'),
+    new NavItem('考试', '/student/exams'),
     new NavItem('设置', '/student/settings')
   ];
 
