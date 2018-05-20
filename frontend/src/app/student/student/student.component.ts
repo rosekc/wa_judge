@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { NavItem } from '../../shared/head/nav-item';
+import { NavItem } from '../../shared/head/nav-item.model';
 
 @Component({
   selector: 'app-student',
@@ -10,8 +10,8 @@ import { NavItem } from '../../shared/head/nav-item';
 })
 export class StudentComponent implements OnInit {
   navItems: NavItem[] = [
-    new NavItem('考试', '/student/exams'),
-    new NavItem('设置', '/student/settings')
+    { label: '考试', link: '/student/exam' },
+    { label: '设置', link: '/student/settings' }
   ];
 
   constructor() {}

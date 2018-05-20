@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { NavItem } from '../../shared/head/nav-item';
+import { NavItem } from '../../shared/head/nav-item.model';
 
 @Component({
   selector: 'app-admin',
@@ -10,8 +10,8 @@ import { NavItem } from '../../shared/head/nav-item';
 })
 export class AdminComponent implements OnInit {
   navItems: NavItem[] = [
-    new NavItem('考试', '/teacher/exam'),
-    new NavItem('设置', '/teacher/settings')
+    { label: '考试', link: '/teacher/exam' },
+    { label: '设置', link: '/teacher/settings' }
   ];
 
   constructor() {}
