@@ -49,8 +49,8 @@ export class LoginComponent implements OnInit {
   login() {
     const email = this.loginForm.get('email').value as string;
     const pass = this.loginForm.get('pass').value as string;
-    this.authService.login({ email, pass }).subscribe(() => {
-      if (this.authService.isLoggedIn) {
+    this.authService.login({ email, pass }).subscribe(b => {
+      if (b) {
         this.router.navigate([this.authService.redirectUrl]);
       } else {
         this.showErrorMessage('邮箱或密码错误', () => {

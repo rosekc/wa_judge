@@ -1,16 +1,14 @@
 import { UserType } from './user-type.enum';
 
-export class User {
-  constructor(
-    public id: number,
-    public email: string,
-    public userName: string,
-    public userType: UserType
-  ) {}
+export interface User {
+  id: number;
+  email: string;
+  userName: string;
+  userType: UserType;
 }
 
 export const Users: Array<User> = [
-  new User(1, 'a@w.a', 'admin', UserType.admin),
-  new User(2, 's@w.a', 'student', UserType.student),
-  new User(3, 't@w.a', 'teacher', UserType.teacher)
+  { id: 1, email: 'a@w.a', userName: 'admin', userType: UserType.admin },
+  { id: 2, email: 's@w.a', userName: 'student', userType: UserType.student },
+  { id: 3, email: 't@w.a', userName: 'teacher', userType: UserType.teacher }
 ];
