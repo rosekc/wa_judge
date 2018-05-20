@@ -10,8 +10,8 @@ import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { DialogService } from '../../shared/dialog/dialog.service';
 import { FormErrorStateMatcher } from '../../shared/form-error-state-matcher';
-import { ErrorDialogComponent } from '../../shared/dialog/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private dialog: MatDialog,
+    private dialogService: DialogService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -53,20 +53,11 @@ export class LoginComponent implements OnInit {
       if (b) {
         this.router.navigate([this.authService.redirectUrl]);
       } else {
-        this.showErrorMessage('邮箱或密码错误', () => {
+        this.dialogService.showErrorMessage('邮箱或密码错误', () => {
           this.loginForm.reset();
           this.emailBox.nativeElement.focus();
         });
       }
-    });
-  }
-
-  showErrorMessage(errorMessage: string, callback: Function) {
-    const dialog = this.dialog.open(ErrorDialogComponent, {
-      data: { errorMessage: errorMessage }
-    });
-    dialog.afterClosed().subscribe(r => {
-      callback();
     });
   }
 }
