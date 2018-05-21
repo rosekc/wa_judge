@@ -6,9 +6,12 @@ import {
   MatDialogModule,
   MatInputModule,
   MatPaginatorModule,
+  MatProgressBarModule,
   MatProgressSpinnerModule,
   MatSortModule,
-  MatTableModule
+  MatTableModule,
+  MatTooltipModule,
+  MatToolbarModule,
 } from '@angular/material';
 
 @NgModule({
@@ -19,9 +22,11 @@ import {
     MatDialogModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    MatToolbarModule
   ],
   declarations: []
 })

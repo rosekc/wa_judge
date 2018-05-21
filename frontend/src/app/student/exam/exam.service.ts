@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { catchError, finalize, map, startWith } from 'rxjs/operators';
+import { catchError, finalize, map, startWith, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { ExamInfo } from './exam-info.model';
 import { ExamState } from './exam-state.enum';
@@ -13,17 +14,33 @@ export class ExamService {
   private examsUrl = '/api/exams';
 
   constructor(private http: HttpClient) {}
+  currentExamInfo: ExamInfo;
+
+  getExam(id: number) {
+    return this.http.get<ExamInfo>(`${this.examsUrl}/${id}`).pipe(
+      map(data => {
+        return this.updateExamState(data);
+      }),
+      tap(data => {
+        this.currentExamInfo = data;
+      })
+    );
+  }
 
   getExamList() {
     return this.http.get<ExamInfo[]>(this.examsUrl).pipe(
       startWith(Array<ExamInfo>()),
       map(data => {
-        return data.map(this.fleshExamState);
+        return data.map(this.updateExamState);
       })
     );
   }
 
-  fleshExamState(x: ExamInfo) {
+  updateCurrentExamInfo() {
+    this.currentExamInfo = this.updateExamState(this.currentExamInfo);
+  }
+
+  updateExamState(x: ExamInfo) {
     const d = Date.now();
     const s = new Date(x.startTime).getTime();
     const e = new Date(x.endTime).getTime();

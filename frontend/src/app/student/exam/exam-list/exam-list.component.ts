@@ -35,6 +35,7 @@ export class ExamListComponent implements OnInit, AfterViewInit {
   }
 
   goExamDetail(x: ExamInfo) {
+    this.examService.currentExamInfo = x;
     this.router.navigate([`/student/exam/${x.id}`]);
   }
 }
