@@ -72,7 +72,7 @@ class UserApi(Resource):
     def put(self):
         json_data = request.get_json()
         if not json_data:
-            unprocessable_entity('data not found in request.')
+            return unprocessable_entity('data not found in request.')
         user = g.current_user
         for key, value in json_data.items():
             if (key not in self.can_modify):
