@@ -28,7 +28,8 @@ import {
     MatProgressSpinnerModule,
     MatSortModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule
   ],
   declarations: []
 })

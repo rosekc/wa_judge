@@ -8,10 +8,9 @@ import { StudentComponent } from './student/student.component';
 import { StudentRoutingModule } from './student-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
-import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
-  imports: [CommonModule, StudentRoutingModule, MatTooltipModule, SharedModule],
+  imports: [CommonModule, StudentRoutingModule, SharedModule],
   providers: [ExamService],
   declarations: [StudentComponent, ExamDetailComponent, ExamListComponent]
 })
