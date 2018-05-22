@@ -1,10 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 import { catchError, finalize, map, startWith } from 'rxjs/operators';
 
-import { ExamService } from '../exam.service';
-import { Router } from '@angular/router';
 import { ExamInfo } from '../exam-info.model';
+import { ExamService } from '../exam.service';
 
 @Component({
   selector: 'app-exam-list',
