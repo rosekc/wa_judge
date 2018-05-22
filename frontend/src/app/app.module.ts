@@ -7,16 +7,13 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { TestGuard } from './test/test.guard';
 
-import { StudentModule } from './student/student.module';
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     CoreModule,
-    AppRoutingModule,
-    StudentModule
+    AppRoutingModule
   ],
   providers: [TestGuard],
   bootstrap: [AppComponent]
