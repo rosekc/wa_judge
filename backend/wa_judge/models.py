@@ -1,3 +1,4 @@
+import enum
 from datetime import datetime
 
 from flask import current_app
@@ -15,6 +16,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    submissions = db.relationship('Submission', back_populates='author')
+    own_contests = db.relationship('Contest', back_populates='owner_user')
 
     @property
     def password(self):
@@ -53,3 +56,58 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class ContestPermission(enum.Enum):
+    """
+        `Contest`的权限枚举类
+
+        PUBLIC - 谁都能进
+
+        PRIVATE - 只有限定人才能进
+
+        INVISIBLE - 除了创建者能见
+    """
+    PUBLIC = 'PUBLIC'
+    PRIVATE = 'PRIVATE'
+    INVISIBLE = 'INVISIBLE'
+
+
+class Contest(db.Model):
+    __tablename__ = 'contests'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    create_time = db.Column(
+        db.DateTime(), default=datetime.utcnow, nullable=False)
+    start_time = db.Column(db.DateTime(), nullable=False)
+    length = db.Column(db.Interval, nullable=False)
+    permission = db.Column(db.Enum(ContestPermission), nullable=False)
+    owner_user_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'), nullable=False)
+    owner_user = db.relationship('User', back_populates='own_contests')
+    problem_set_filename = db.Column(db.String(64))
+    submissions = db.relationship('Submission', back_populates='contest')
+
+    def is_running(self):
+        current_time = datetime.utcnow()
+        return self.start_time <= current_time <= self.start_time + self.length
+
+    def is_ended(self):
+        current_time = datetime.utcnow()
+        return current_time > self.start_time + self.length
+
+    def is_started(self):
+        current_time = datetime.utcnow()
+        return current_time >= self.start_time
+
+
+class Submission(db.Model):
+    __tablename__ = 'submissions'
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'), nullable=False)
+    author = db.relationship('User', back_populates='submissions')
+    contest_id = db.Column(db.Integer, db.ForeignKey('contests.id'))
+    contest = db.relationship('Contest', back_populates='submissions')
+    submit_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    uploaded_filename = db.Column(db.String(128))

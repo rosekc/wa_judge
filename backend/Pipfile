@@ -10,11 +10,14 @@ flask-restful = "*"
 flask-httpauth = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+flask-uploads = "*"
+marshmallow-enum = "*"
 
 [dev-packages]
 pylint = "*"
 "autopep8" = "*"
 coverage = "*"
+rope = "*"
 
 [requires]
 python_version = "3.6"

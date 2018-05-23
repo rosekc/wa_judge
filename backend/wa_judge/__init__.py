@@ -1,9 +1,11 @@
 import os
 
-from flask import Flask
+from flask import Flask, current_app, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
+from flask_uploads import configure_uploads, send_from_directory
+
 from .config import config
 
 db = SQLAlchemy()
@@ -35,7 +37,16 @@ def create_app(config_name='development', test_config=None):
     from .apiv1.auth import TokenApi, UserApi
     api.add_resource(TokenApi, '/token')
     api.add_resource(UserApi,  '/users/', '/users/<int:user_id>')
+    from .apiv1.contest import ContestApi, ContestProblemSetApi
+    api.add_resource(ContestApi,  '/contests/', '/contests/<int:contest_id>')
+    api.add_resource(ContestProblemSetApi,
+                     '/contests/<int:contest_id>/problem_set')
     api.init_app(app)
+
+    app.config['UPLOADS_DEFAULT_DEST'] = app.instance_path
+
+    from .apiv1.contest import problem_sets
+    configure_uploads(app, problem_sets)
 
     return app
 
@@ -43,10 +54,15 @@ def create_app(config_name='development', test_config=None):
 app = create_app()
 
 
+@app.endpoint('_uploads.uploaded_file')
+def uploaded_file(setname, filename):
+    abort(404)
+
+
 @app.shell_context_processor
 def make_shell_context():
-    from .models import User
-    return dict(db=db, User=User)
+    from .models import User, Contest
+    return dict(db=db, User=User, Contest=Contest)
 
 
 @app.cli.command()

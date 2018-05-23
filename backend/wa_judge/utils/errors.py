@@ -8,3 +8,10 @@ def unprocessable_entity(message):
 
 def conflict(message):
     return {'error': message}, 409
+
+
+def unauthorized(message):
+    return {'error': message}, 401
+
+def forbidden(message):
+    return {'error': message}, 403
