@@ -6,7 +6,7 @@ from sqlalchemy import and_, or_
 
 from .. import db, ma
 from ..models import User
-from ..utils.decorator import get_args
+from ..utils.decorator import check_authentication, get_args
 from ..utils.errors import conflict, not_found, unprocessable_entity
 
 auth = HTTPBasicAuth()
@@ -14,22 +14,25 @@ auth = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password(username_or_token, password):
+    g.authenticated = False
+    g.current_user = None
     if username_or_token == '':
-        return False
+        return True
     if password == '':
         g.current_user = User.verify_auth_token(username_or_token)
         g.token_used = True
-        return g.current_user is not None
-    user = User.query.filter_by(username=username_or_token).first()
-    if not user or not user.verify_password(password):
-        return False
-    g.current_user = user
-    g.token_used = False
-    return True
+    else:
+        user = User.query.filter_by(username=username_or_token).first()
+        g.token_used = False
+        if user and user.verify_password(password):
+            g.current_user = user
+    if g.current_user:
+        g.authenticated = True
+    return g.authenticated
 
 
 class TokenApi(Resource):
-    @auth.login_required
+    @check_authentication(auth, login_required=True)
     def get(self):
         return {'token': g.current_user.generate_auth_token(3600)}
 
@@ -68,7 +71,7 @@ class UserApi(Resource):
         db.session.commit()
         return self.user_schema.dump(data)
 
-    @auth.login_required
+    @check_authentication(auth, login_required=True)
     def put(self):
         json_data = request.get_json()
         if not json_data:

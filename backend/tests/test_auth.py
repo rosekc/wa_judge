@@ -1,5 +1,6 @@
 import unittest
 from base64 import b64encode
+
 from wa_judge import create_app, db
 from wa_judge.models import User
 
@@ -13,7 +14,7 @@ def auth_headers(username='wawawa', password='wawawa'):
     }
 
 
-class APITestCase(unittest.TestCase):
+class AuthTestCase(unittest.TestCase):
 
     def setUp(self):
         self.app = create_app('testing')
@@ -77,6 +78,10 @@ class APITestCase(unittest.TestCase):
             json_data = res.get_json()
             self.assertEqual(res.status_code, 200)
             self.assertEqual(json_data.get('username'), 'wawa')
+
+    def test_anonymous_login(self):
+        # TODO: 因为目前没有用到这种匿名登陆有区别的api，待有的时候补充
+        pass
 
     def test_update_user(self):
         with self.app.test_client() as c:
