@@ -6,7 +6,7 @@ from sqlalchemy import and_, or_
 
 from .. import db, ma
 from ..models import User
-from ..utils.decorator import check_authentication, get_args
+from ..utils.decorators import check_authentication, get_args
 from ..utils.errors import conflict, not_found, unprocessable_entity
 
 auth = HTTPBasicAuth()
