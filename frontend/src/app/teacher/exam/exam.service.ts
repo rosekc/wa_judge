@@ -11,10 +11,10 @@ import { ExamState } from './exam-state.enum';
   providedIn: 'root'
 })
 export class ExamService {
+  currentExamInfo: ExamInfo;
   private examsUrl = '/api/exams';
 
   constructor(private http: HttpClient) {}
-  currentExamInfo: ExamInfo;
 
   getExam(id: number) {
     return this.http.get<ExamInfo>(`${this.examsUrl}/${id}`).pipe(

@@ -19,10 +19,9 @@ import { FormErrorStateMatcher } from '../../shared/form-error-state-matcher';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  matcher = new FormErrorStateMatcher();
   loginForm: FormGroup;
   @ViewChild('emailBox') emailBox;
-
-  matcher = new FormErrorStateMatcher();
 
   constructor(
     private authService: AuthService,

@@ -10,9 +10,10 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTooltipModule,
-  MatToolbarModule,
+  MatToolbarModule
 } from '@angular/material';
 
 @NgModule({
@@ -27,6 +28,7 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSortModule,
+    MatStepperModule,
     MatTableModule,
     MatToolbarModule,
     MatTooltipModule

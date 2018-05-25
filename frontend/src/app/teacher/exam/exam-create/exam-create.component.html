@@ -1,3 +1,61 @@
-<p>
-  exam-new works!
-</p>
+<form (ngSubmit)="create()" [formGroup]="examForm">
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px" fxFlexFill>
+      <button mat-raised-button color="primary" (click)="goBack()">返回</button>
+      <button mat-raised-button color="accent" type="submit" [disabled]="examForm.invalid">创建</button>
+    </div>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <mat-step label="输入考试的基本信息" [stepControl]="examForm">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
+          <mat-form-field class="examFormControlLength">
+            <mat-label>名称</mat-label>
+            <input matInput placeholder="请输入考试名称" type="text" required formControlName="name" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="!examForm.get('name').hasError('required') && (examForm.get('name').hasError('mixLength') || !examForm.get('name').hasError('maxLength'))">
+              请输入一个长度为3到255的名称
+            </mat-error>
+            <mat-error *ngIf="examForm.get('name').hasError('required')">
+              名称是
+              <strong>必须</strong>的
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="examFormControlLength">
+            <mat-label>开始时间</mat-label>
+            <input matInput placeholder="请输入开始时间" type="datetime-local" required formControlName="startTime" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="!examForm.get('startTime').hasError('required') && examForm.get('startTime').invalid">
+              请输入一个合法的时间
+            </mat-error>
+            <mat-error *ngIf="examForm.get( 'startTime').hasError( 'required')">
+              开始时间是
+              <strong>必须</strong>的
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="examFormControlLength">
+            <mat-label>结束时间</mat-label>
+            <input matInput placeholder="请输入结束时间" type="datetime-local" required formControlName="endTime" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="!examForm.get('endTime').hasError('required') && examForm.get('endTime').invalid">
+              请输入一个合法的时间
+            </mat-error>
+            <mat-error *ngIf="examForm.get( 'endTime').hasError( 'required') ">
+              结束时间是
+              <strong>必须</strong>的
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-step>
+
+      <mat-step label="选择参加考试的学生">
+      </mat-step>
+
+      <mat-step label="确认">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="12.5px">
+          <p>请在确认好后请点击右上角的“创建”。</p>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0px" fxFlexFill>
+            <button mat-raised-button color="warn" (click)="stepper.reset()">重置</button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</form>
