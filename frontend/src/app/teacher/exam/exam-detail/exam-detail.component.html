@@ -1,3 +1,5 @@
-<p>
-  exam-detail works!
-</p>
+<ng-container [ngSwitch]="examInfo.state">
+  <app-exam-detail-no-started *ngSwitchCase="0"></app-exam-detail-no-started>
+  <app-exam-detail-in-progress *ngSwitchCase="1"></app-exam-detail-in-progress>
+  <app-exam-detail-ended *ngSwitchCase="2"></app-exam-detail-ended>
+</ng-container>
