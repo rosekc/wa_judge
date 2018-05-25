@@ -7,7 +7,7 @@
     <mat-vertical-stepper [linear]="true" #stepper>
       <mat-step label="输入考试的基本信息" [stepControl]="examForm">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
-          <mat-form-field class="examFormControlLength">
+          <mat-form-field class="examFormControl">
             <mat-label>名称</mat-label>
             <input matInput placeholder="请输入考试名称" type="text" required formControlName="name" [errorStateMatcher]="matcher">
             <mat-error *ngIf="!examForm.get('name').hasError('required') && (examForm.get('name').hasError('mixLength') || !examForm.get('name').hasError('maxLength'))">
@@ -19,7 +19,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="examFormControlLength">
+          <mat-form-field class="examFormControl">
             <mat-label>开始时间</mat-label>
             <input matInput placeholder="请输入开始时间" type="datetime-local" required formControlName="startTime" [errorStateMatcher]="matcher">
             <mat-error *ngIf="!examForm.get('startTime').hasError('required') && examForm.get('startTime').invalid">
@@ -31,7 +31,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="examFormControlLength">
+          <mat-form-field class="examFormControl">
             <mat-label>结束时间</mat-label>
             <input matInput placeholder="请输入结束时间" type="datetime-local" required formControlName="endTime" [errorStateMatcher]="matcher">
             <mat-error *ngIf="!examForm.get('endTime').hasError('required') && examForm.get('endTime').invalid">

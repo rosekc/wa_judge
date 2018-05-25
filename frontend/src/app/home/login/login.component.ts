@@ -19,6 +19,7 @@ import { FormErrorStateMatcher } from '../../shared/form-error-state-matcher';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  isLoading = false;
   matcher = new FormErrorStateMatcher();
   loginForm: FormGroup;
   @ViewChild('emailBox') emailBox;
@@ -46,6 +47,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.isLoading = true;
     const email = this.loginForm.get('email').value as string;
     const pass = this.loginForm.get('pass').value as string;
     this.authService.login({ email, pass }).subscribe(b => {
@@ -53,6 +55,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate([this.authService.redirectUrl]);
       } else {
         this.dialogService.showErrorMessage('邮箱或密码错误', () => {
+          this.isLoading = false;
           this.loginForm.reset();
           this.emailBox.nativeElement.focus();
         });
