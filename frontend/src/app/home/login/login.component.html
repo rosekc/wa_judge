@@ -1,27 +1,31 @@
-<form (ngSubmit)="login()" [formGroup]="loginForm">
-  <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <mat-form-field class="loginFormControlLength">
-      <input #emailBox matInput placeholder="邮箱" formControlName="email" [errorStateMatcher]="matcher">
-      <mat-error *ngIf="loginForm.get('email').hasError('email') && !loginForm.get('email').hasError('required')">
-        请输入一个合法的邮箱
-      </mat-error>
-      <mat-error *ngIf="loginForm.get('email').hasError('required')">
-        邮箱是
-        <strong>必须</strong>的
-      </mat-error>
-    </mat-form-field>
+<mat-card>
+  <mat-card-content>
+    <form (ngSubmit)="login()" [formGroup]="loginForm">
+      <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <mat-form-field class="loginFormControlLength">
+          <input #emailBox matInput placeholder="邮箱" formControlName="email" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="loginForm.get('email').hasError('email') && !loginForm.get('email').hasError('required')">
+            请输入一个合法的邮箱
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email').hasError('required')">
+            邮箱是
+            <strong>必须</strong>的
+          </mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="loginFormControlLength">
-      <input matInput placeholder="密码" formControlName="pass" type="password" [errorStateMatcher]="matcher">
-      <mat-error *ngIf="loginForm.get('pass').hasError('pattern') && !loginForm.get('pass').hasError('required')">
-        请输入无空字符密码
-      </mat-error>
-      <mat-error *ngIf="loginForm.get('pass').hasError('required')">
-        密码是
-        <strong>必须</strong>的
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field class="loginFormControlLength">
+          <input matInput placeholder="密码" formControlName="pass" type="password" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="loginForm.get('pass').hasError('pattern') && !loginForm.get('pass').hasError('required')">
+            请输入无空字符密码
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('pass').hasError('required')">
+            密码是
+            <strong>必须</strong>的
+          </mat-error>
+        </mat-form-field>
 
-    <button class="loginFormControlLength" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">登录</button>
-  </div>
-</form>
+        <button class="loginFormControlLength" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">登录</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
