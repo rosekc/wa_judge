@@ -2,8 +2,8 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isNumber } from 'util';
 
-import { ExamService } from '../exam.service';
 import { ExamInfo } from '../exam-info.model';
+import { ExamService } from '../exam.service';
 
 @Component({
   selector: 'app-exam-detail',
@@ -68,7 +68,8 @@ export class ExamDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   private initExamInfo() {
     if (!this.examService.currentExamInfo) {
       const id = this.route.snapshot.paramMap.get('id');
-      if (isNumber(Number(id))) {
+      const nid = Number(id);
+      if (isNumber(nid) && !isNaN(nid)) {
         this.examService.getExam(Number.parseInt(id)).subscribe(
           x => {
             if (x) {
