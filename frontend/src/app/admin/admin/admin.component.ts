@@ -10,8 +10,8 @@ import { NavItem } from '../../shared/head/nav-item.model';
 })
 export class AdminComponent implements OnInit {
   navItems: NavItem[] = [
-    { label: '考试', link: '/teacher/exam' },
-    { label: '设置', link: '/teacher/settings' }
+    { label: '考试', link: '/admin/exam' },
+    { label: '设置', link: '/admin/settings' }
   ];
 
   constructor() {}
