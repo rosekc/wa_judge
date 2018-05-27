@@ -6,9 +6,10 @@ import { TeacherComponent } from './teacher/teacher.component';
 import { TeacherRoutingModule } from './teacher-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [CommonModule, TeacherRoutingModule, SharedModule, ExamModule],
-  declarations: [TeacherComponent]
+  declarations: [TeacherComponent, SettingsComponent]
 })
 export class TeacherModule {}

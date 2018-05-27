@@ -6,9 +6,10 @@ import { StudentComponent } from './student/student.component';
 import { StudentRoutingModule } from './student-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [CommonModule, StudentRoutingModule, SharedModule, ExamModule],
-  declarations: [StudentComponent]
+  declarations: [StudentComponent, SettingsComponent]
 })
 export class StudentModule {}
