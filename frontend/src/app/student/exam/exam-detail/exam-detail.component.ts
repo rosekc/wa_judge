@@ -4,6 +4,7 @@ import { isNumber } from 'util';
 
 import { ExamInfo } from '../exam-info.model';
 import { ExamService } from '../exam.service';
+import { ExamState } from '../exam-state.enum';
 
 @Component({
   selector: 'app-exam-detail',
@@ -48,6 +49,10 @@ export class ExamDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     return !this.examInfo && this.isLoading;
   }
 
+  goBack() {
+    this.router.navigate(['/student/exam']);
+  }
+
   private updateExamInfo() {
     this.timer = setInterval(() => {
       const e = new Date(this.examInfo.endTime).getTime();
@@ -75,15 +80,15 @@ export class ExamDetailComponent implements OnInit, AfterViewInit, OnDestroy {
             if (x) {
               this.updateExamInfo();
             } else {
-              this.router.navigate(['/student/exam']);
+              this.goBack();
             }
           },
           error => {
-            this.router.navigate(['/student/exam']);
+            this.goBack();
           }
         );
       } else {
-        this.router.navigate(['/student/exam']);
+        this.goBack();
       }
     } else {
       this.updateExamInfo();

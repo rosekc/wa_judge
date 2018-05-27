@@ -29,9 +29,9 @@
         <th mat-header-cell *matHeaderCellDef> 状态 </th>
         <td mat-cell *matCellDef="let element">
           <ng-container [ngSwitch]="element.state">
-            <button mat-button *ngSwitchCase='0' disabled>未开始</button>
+            <button mat-button *ngSwitchCase='0' (click)="goExamDetail(element)">未开始</button>
             <button mat-button *ngSwitchCase='1' color='primary' (click)="goExamDetail(element)">进行中</button>
-            <button mat-button *ngSwitchCase='2' disabled>已结束</button>
+            <button mat-button *ngSwitchCase='2' color='warn' (click)="goExamDetail(element)">已结束</button>
           </ng-container>
         </td>
       </ng-container>
