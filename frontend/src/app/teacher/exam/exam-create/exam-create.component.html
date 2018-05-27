@@ -1,7 +1,7 @@
 <form (ngSubmit)="create()" [formGroup]="examForm">
   <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
-    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px" fxFlexFill>
-      <button mat-raised-button color="primary" (click)="goBack()">返回</button>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+      <button mat-raised-button (click)="goBack()">返回</button>
       <button mat-raised-button color="accent" type="submit" [disabled]="examForm.invalid">创建</button>
     </div>
     <mat-vertical-stepper [linear]="true" #stepper>
