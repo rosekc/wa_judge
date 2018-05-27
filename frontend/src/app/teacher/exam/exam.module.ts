@@ -7,6 +7,7 @@ import { ExamDetailEndedComponent } from './exam-detail/exam-detail-ended/exam-d
 import { ExamDetailInProgressComponent } from './exam-detail/exam-detail-in-progress/exam-detail-in-progress.component';
 import { ExamDetailNoStartedComponent } from './exam-detail/exam-detail-no-started/exam-detail-no-started.component';
 import { ExamListComponent } from './exam-list/exam-list.component';
+import { ExamProgressComponent } from './exam-detail/exam-progress/exam-progress.component';
 import { ExamService } from './exam.service';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -17,10 +18,11 @@ import { SharedModule } from '../../shared/shared.module';
   declarations: [
     ExamCreateComponent,
     ExamDetailComponent,
-    ExamListComponent,
     ExamDetailEndedComponent,
     ExamDetailInProgressComponent,
-    ExamDetailNoStartedComponent
+    ExamDetailNoStartedComponent,
+    ExamListComponent,
+    ExamProgressComponent
   ]
 })
 export class ExamModule {}
