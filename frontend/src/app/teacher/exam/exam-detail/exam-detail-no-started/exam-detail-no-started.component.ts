@@ -53,6 +53,8 @@ export class ExamDetailNoStartedComponent implements OnInit {
 
   save() {}
 
+  delete() {}
+
   goBack() {
     this.router.navigate(['/teacher/exam']);
   }
