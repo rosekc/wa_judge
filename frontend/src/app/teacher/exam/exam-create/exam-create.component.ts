@@ -6,6 +6,8 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { Moment } from 'moment';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { ExamService } from '../exam.service';
@@ -44,8 +46,8 @@ export class ExamCreateComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(255)
       ]),
-      startTime: new FormControl('', [Validators.required]),
-      endTime: new FormControl('', [Validators.required])
+      startTime: new FormControl(undefined, [Validators.required]),
+      endTime: new FormControl(undefined, [Validators.required])
     });
   }
 
