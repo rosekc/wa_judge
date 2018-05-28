@@ -15,7 +15,7 @@ import { ExamService } from '../exam.service';
 export class ExamListComponent implements OnInit, AfterViewInit {
   displayedColumns = ['name', 'startTime', 'endTime', 'state'];
   dataSource = new MatTableDataSource();
-  isLoadingResults = true;
+  isLoading = true;
 
   constructor(
     private authService: AuthService,
@@ -26,12 +26,12 @@ export class ExamListComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.isLoadingResults = true;
+    this.isLoading = true;
     this.examService
       .getExamList()
       .pipe(
         finalize(() => {
-          this.isLoadingResults = false;
+          this.isLoading = false;
         })
       )
       .subscribe(data => {
