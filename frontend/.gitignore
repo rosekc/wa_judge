@@ -40,3 +40,7 @@ Thumbs.db
 
 # yarn
 yarn.lock
+
+# firebase
+.firebaserc
+firebase.json

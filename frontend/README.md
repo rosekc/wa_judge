@@ -2,7 +2,7 @@
 
 前端部分
 
-基于[Angular](https://angular.io/)开发。
+基于[Angular](https://angular.io/)开发，查看[Demo](https://wajudge-demo.firebaseapp.com/)。
 
 ## Install Dependencies
 
