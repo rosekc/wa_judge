@@ -1,6 +1,7 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { ExamInfo } from '../student/exam/exam-info.model';
 import { ExamState } from '../student/exam/exam-state.enum';
+import { StudentInfo } from '../admin/student/student-info.model';
 
 export class InMemoryDataService extends InMemoryDbService {
   createDb() {
@@ -28,6 +29,9 @@ export class InMemoryDataService extends InMemoryDbService {
         endTime: new Date(`2018-05-${n.getDate() - 1}T14:00:00.000+08:00`)
       }
     ];
-    return { exams };
+    const students: StudentInfo[] = [
+      { id: 1, email: 's@w.a', name: 'student' }
+    ];
+    return { exams, students };
   }
 }
