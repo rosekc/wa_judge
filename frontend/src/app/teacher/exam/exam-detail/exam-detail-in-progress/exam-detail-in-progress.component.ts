@@ -19,7 +19,7 @@ export class ExamDetailInProgressComponent implements OnInit {
   ngOnInit() {}
 
   updateExamInfo() {
-    this.examService.updateCurrentExamInfo();
+    return () => this.examService.updateCurrentExamInfo();
   }
 
   goBack() {
