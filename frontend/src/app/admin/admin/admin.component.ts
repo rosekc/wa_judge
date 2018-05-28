@@ -11,6 +11,8 @@ import { NavItem } from '../../shared/head/nav-item.model';
 export class AdminComponent implements OnInit {
   navItems: NavItem[] = [
     { label: '考试', link: '/admin/exam' },
+    { label: '学生', link: '/admin/student' },
+    { label: '教师', link: '/admin/teacher' },
     { label: '设置', link: '/admin/settings' }
   ];
 
