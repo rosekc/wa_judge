@@ -9,13 +9,22 @@ import { StudentInfo } from './student-info.model';
   providedIn: 'root'
 })
 export class StudentService {
-  private examsUrl = '/api/students';
+  currentStudentInfo: StudentInfo;
+  private studentsUrl = '/api/students';
 
   constructor(private http: HttpClient) {}
 
+  getExam(id: number) {
+    return this.http.get<StudentInfo>(`${this.studentsUrl}/${id}`).pipe(
+      tap(data => {
+        this.currentStudentInfo = data;
+      })
+    );
+  }
+
   getStudentList() {
     return this.http
-      .get<StudentInfo[]>(this.examsUrl)
+      .get<StudentInfo[]>(this.studentsUrl)
       .pipe(startWith(Array<StudentInfo>()));
   }
 }

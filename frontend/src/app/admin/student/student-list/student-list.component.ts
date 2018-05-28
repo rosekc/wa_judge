@@ -18,13 +18,13 @@ export class StudentListComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<StudentInfo>(true, []);
   isLoading = true;
 
-  constructor(private examService: StudentService, private router: Router) {}
+  constructor(private studentService: StudentService, private router: Router) {}
 
   ngOnInit() {}
 
   ngAfterViewInit() {
     this.isLoading = true;
-    this.examService
+    this.studentService
       .getStudentList()
       .pipe(
         finalize(() => {
@@ -58,7 +58,8 @@ export class StudentListComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/admin/student/create']);
   }
 
-  goDetail(id: number) {
-    this.router.navigate([`/admin/student/${id}`]);
+  goDetail(x: StudentInfo) {
+    this.studentService.currentStudentInfo = x;
+    this.router.navigate([`/admin/student/${x.id}`]);
   }
 }
