@@ -47,7 +47,7 @@ export class StudentDetailComponent
   ngAfterViewInit() {
     this.isLoading = true;
     this.isFormLoading = true;
-    this.initExamInfo();
+    this.initStudentInfo();
   }
 
   ngOnDestroy() {
@@ -56,13 +56,13 @@ export class StudentDetailComponent
 
   createForm(): void {
     this.studentForm = this.fb.group({
-      email: new FormControl(this.studentInfo.email, [
+      userName: new FormControl(this.studentInfo.userName, [
         Validators.required,
-        Validators.email
+        Validators.maxLength(32),
+        Validators.pattern(/\S+/)
       ]),
       name: new FormControl(this.studentInfo.name, [
         Validators.required,
-        Validators.minLength(1),
         Validators.maxLength(32),
         Validators.pattern(/\S+/)
       ])
@@ -85,7 +85,7 @@ export class StudentDetailComponent
     return !this.studentInfo && this.isLoading;
   }
 
-  private initExamInfo() {
+  private initStudentInfo() {
     if (!this.studentService.currentStudentInfo) {
       const id = this.route.snapshot.paramMap.get('id');
       const nid = Number(id);

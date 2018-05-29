@@ -17,16 +17,16 @@ export class AuthService {
   constructor() {
     const token = localStorage.getItem('access_token');
     if (token) {
-      this.user = Users.find((x: User) => x.email === token);
+      this.user = Users.find((x: User) => x.userName === token);
       this.isLoggedIn = true;
       this.resetRedirectUrl();
     }
   }
 
-  login({ email, pass }: { email: string; pass: string }): Observable<boolean> {
-    const user = Users.find((x: User) => x.email === email);
+  login({ userName, pass }: { userName: string; pass: string }): Observable<boolean> {
+    const user = Users.find((x: User) => x.userName === userName);
     let flag = false;
-    if (user && user.email[0] === pass) {
+    if (user && user.userName[0] === pass) {
       flag = true;
     }
 
@@ -36,7 +36,7 @@ export class AuthService {
         this.isLoggedIn = val;
         this.user = user;
         if (val) {
-          localStorage.setItem('access_token', user.email);
+          localStorage.setItem('access_token', user.userName);
           this.resetRedirectUrl();
         }
       })

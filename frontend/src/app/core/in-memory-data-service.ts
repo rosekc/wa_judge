@@ -30,7 +30,7 @@ export class InMemoryDataService extends InMemoryDbService {
       }
     ];
     const students: StudentInfo[] = [
-      { id: 1, email: 's@w.a', name: 'student' }
+      { id: 1, userName: 's@w.a', name: 'student' }
     ];
     return { exams, students };
   }

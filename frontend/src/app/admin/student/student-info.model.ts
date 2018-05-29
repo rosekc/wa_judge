@@ -1,5 +1,5 @@
 export interface StudentInfo {
   id: number;
-  email: string;
+  userName: string;
   name: string;
 }

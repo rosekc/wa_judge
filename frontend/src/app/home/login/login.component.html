@@ -3,12 +3,15 @@
     <form (ngSubmit)="login()" [formGroup]="loginForm">
       <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
         <mat-form-field class="loginFormControl">
-          <input #emailBox matInput placeholder="邮箱" formControlName="email" [errorStateMatcher]="matcher" [readOnly]="isLoading">
-          <mat-error *ngIf="loginForm.get('email').hasError('email') && !loginForm.get('email').hasError('required')">
-            请输入一个合法的邮箱
+          <input #userNameBox matInput placeholder="用户名" formControlName="userName" [errorStateMatcher]="matcher" [readOnly]="isLoading">
+          <mat-error *ngIf="loginForm.get('userName').hasError('pattern') && !loginForm.get('userName').hasError('required')">
+            请输入无空字符的用户名
           </mat-error>
-          <mat-error *ngIf="loginForm.get('email').hasError('required')">
-            邮箱是
+          <mat-error *ngIf="!loginForm.get('userName').hasError('required') && !loginForm.get('userName').hasError('maxLength')">
+            请输入长度不大于32个字符的用户名
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('userName').hasError('required')">
+            用户名是
             <strong>必须</strong>的
           </mat-error>
         </mat-form-field>

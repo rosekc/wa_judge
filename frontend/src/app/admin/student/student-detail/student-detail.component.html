@@ -12,12 +12,15 @@
           <form (ngSubmit)="save()" [formGroup]="studentForm">
             <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
               <mat-form-field class="studentFormControl">
-                <input #emailBox matInput placeholder="邮箱" formControlName="email" [errorStateMatcher]="matcher" [readOnly]="isFormLoading">
-                <mat-error *ngIf="studentForm.get('email').hasError('email') && !studentForm.get('email').hasError('required')">
-                  请输入一个合法的邮箱
+                <input #userNameBox matInput placeholder="用户名" formControlName="userName" [errorStateMatcher]="matcher" [readOnly]="isFormLoading">
+                <mat-error *ngIf="studentForm.get('userName').hasError('pattern') && !studentForm.get('userName').hasError('required')">
+                  请输入无空字符的用户名
                 </mat-error>
-                <mat-error *ngIf="studentForm.get('email').hasError('required')">
-                  邮箱是
+                <mat-error *ngIf="!studentForm.get('userName').hasError('required') && !studentForm.get('userName').hasError('maxLength')">
+                  请输入长度不大于32个字符的用户名
+                </mat-error>
+                <mat-error *ngIf="studentForm.get('userName').hasError('required')">
+                  姓名是
                   <strong>必须</strong>的
                 </mat-error>
               </mat-form-field>
@@ -27,8 +30,8 @@
                 <mat-error *ngIf="studentForm.get('name').hasError('pattern') && !studentForm.get('name').hasError('required')">
                   请输入无空字符的姓名
                 </mat-error>
-                <mat-error *ngIf="!studentForm.get('name').hasError('required') && (!studentForm.get('name').hasError('maxLength') || studentForm.get('name').hasError('minLength'))">
-                  请输入长度为1到32的姓名
+                <mat-error *ngIf="!studentForm.get('name').hasError('required') && !studentForm.get('name').hasError('maxLength')">
+                  请输入长度不大于32个字符的姓名
                 </mat-error>
                 <mat-error *ngIf="studentForm.get('name').hasError('required')">
                   姓名是
