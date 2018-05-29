@@ -17,14 +17,14 @@
         </mat-form-field>
 
         <mat-form-field class="loginFormControl">
-          <input matInput placeholder="密码" formControlName="pass" type="password" [errorStateMatcher]="matcher" [readOnly]="isLoading">
-          <mat-error *ngIf="loginForm.get('pass').hasError('pattern') && !loginForm.get('pass').hasError('required')">
+          <input matInput placeholder="密码" formControlName="password" type="password" [errorStateMatcher]="matcher" [readOnly]="isLoading">
+          <mat-error *ngIf="loginForm.get('password').hasError('pattern') && !loginForm.get('password').hasError('required')">
             请输入无空字符的密码
           </mat-error>
-          <mat-error *ngIf="!loginForm.get('pass').hasError('required') && !loginForm.get('pass').hasError('maxLength')">
+          <mat-error *ngIf="!loginForm.get('password').hasError('required') && !loginForm.get('password').hasError('maxLength')">
             请输入长度不大于32个字符的密码
           </mat-error>
-          <mat-error *ngIf="loginForm.get('pass').hasError('required')">
+          <mat-error *ngIf="loginForm.get('password').hasError('required')">
             密码是
             <strong>必须</strong>的
           </mat-error>

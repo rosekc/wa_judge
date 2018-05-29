@@ -3,8 +3,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
-  FormControlDirective
+  Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
@@ -42,7 +41,7 @@ export class LoginComponent implements OnInit {
         Validators.maxLength(32),
         Validators.pattern(/\S+/)
       ]),
-      pass: new FormControl('', [
+      password: new FormControl('', [
         Validators.required,
         Validators.maxLength(32),
         Validators.pattern(/\S+/)

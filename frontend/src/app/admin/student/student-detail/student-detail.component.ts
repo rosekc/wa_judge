@@ -3,8 +3,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
-  FormControlDirective
+  Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';

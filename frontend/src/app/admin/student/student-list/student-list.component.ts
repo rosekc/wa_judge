@@ -37,7 +37,7 @@ export class StudentListComponent implements OnInit, AfterViewInit {
   }
 
   isSelected() {
-    return this.selection.selected.length <= 0;
+    return this.selection.hasValue();
   }
 
   isAllSelected() {

@@ -23,10 +23,10 @@ export class AuthService {
     }
   }
 
-  login({ userName, pass }: { userName: string; pass: string }): Observable<boolean> {
+  login({ userName, password }: { userName: string; password: string }): Observable<boolean> {
     const user = Users.find((x: User) => x.userName === userName);
     let flag = false;
-    if (user && user.userName[0] === pass) {
+    if (user && user.userName[0] === password) {
       flag = true;
     }
 
