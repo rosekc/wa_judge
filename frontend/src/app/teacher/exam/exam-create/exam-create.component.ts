@@ -22,6 +22,8 @@ export class ExamCreateComponent implements OnInit {
   examForm: FormGroup;
   matcher = new FormErrorStateMatcher();
 
+  private url = '/teacher/exam';
+
   constructor(
     private authService: AuthService,
     private examService: ExamService,
@@ -54,6 +56,6 @@ export class ExamCreateComponent implements OnInit {
   create() {}
 
   goBack() {
-    this.router.navigate(['/teacher/exam']);
+    this.router.navigate([this.url]);
   }
 }

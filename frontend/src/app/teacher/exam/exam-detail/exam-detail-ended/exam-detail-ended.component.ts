@@ -14,6 +14,8 @@ export class ExamDetailEndedComponent implements OnInit {
     return this.examService.currentExamInfo;
   }
 
+  private url = '/teacher/exam';
+
   constructor(private examService: ExamService, private router: Router) {}
 
   ngOnInit() {}
@@ -25,6 +27,6 @@ export class ExamDetailEndedComponent implements OnInit {
   download() {}
 
   goBack() {
-    this.router.navigate(['/teacher/exam']);
+    this.router.navigate([this.url]);
   }
 }

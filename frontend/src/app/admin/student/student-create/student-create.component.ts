@@ -7,11 +7,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./student-create.component.css']
 })
 export class StudentCreateComponent implements OnInit {
+  private url = '/admin/student';
+
   constructor(private router: Router) {}
 
   ngOnInit() {}
 
   goBack() {
-    this.router.navigate(['/admin/student']);
+    this.router.navigate([this.url]);
   }
 }

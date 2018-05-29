@@ -14,7 +14,7 @@ export class StudentService {
 
   constructor(private http: HttpClient) {}
 
-  getExam(id: number) {
+  getStudent(id: number) {
     return this.http.get<StudentInfo>(`${this.studentsUrl}/${id}`).pipe(
       tap(data => {
         this.currentStudentInfo = data;

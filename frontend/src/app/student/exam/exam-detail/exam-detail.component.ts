@@ -15,7 +15,9 @@ export class ExamDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   totalTime: number;
   restTime: number;
+
   private timer;
+  private url = '/student/exam';
 
   get examInfo(): ExamInfo {
     return this.examService.currentExamInfo;
@@ -50,7 +52,7 @@ export class ExamDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/student/exam']);
+    this.router.navigate([this.url]);
   }
 
   private updateExamInfo() {

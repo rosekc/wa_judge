@@ -29,6 +29,9 @@ export class StudentDetailComponent
   get studentInfo(): StudentInfo {
     return this.studentService.currentStudentInfo;
   }
+
+  private url = '/admin/student';
+
   constructor(
     private dialogService: DialogService,
     private fb: FormBuilder,
@@ -77,7 +80,7 @@ export class StudentDetailComponent
   resetPassword() {}
 
   goBack() {
-    this.router.navigate(['/admin/student']);
+    this.router.navigate([this.url]);
   }
 
   getIsLoading() {
@@ -89,7 +92,7 @@ export class StudentDetailComponent
       const id = this.route.snapshot.paramMap.get('id');
       const nid = Number(id);
       if (isNumber(nid) && !isNaN(nid)) {
-        this.studentService.getExam(nid).subscribe(
+        this.studentService.getStudent(nid).subscribe(
           x => {
             if (x) {
               this.createForm();

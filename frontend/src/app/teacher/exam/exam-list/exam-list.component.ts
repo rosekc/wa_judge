@@ -17,6 +17,8 @@ export class ExamListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   isLoading = true;
 
+  private url = '/teacher/exam';
+
   constructor(
     private authService: AuthService,
     private examService: ExamService,
@@ -41,11 +43,11 @@ export class ExamListComponent implements OnInit, AfterViewInit {
 
   goExamCreate() {
     this.examService.currentExamInfo = { name: '新考试', teacherId: this.authService.user.id };
-    this.router.navigate([`/teacher/exam/create`]);
+    this.router.navigate([`${this.url}/create`]);
   }
 
   goExamDetail(x: ExamInfo) {
     this.examService.currentExamInfo = x;
-    this.router.navigate([`/teacher/exam/${x.id}`]);
+    this.router.navigate([`${this.url}/${x.id}`]);
   }
 }

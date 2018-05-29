@@ -22,6 +22,8 @@ export class ExamDetailNoStartedComponent implements OnInit {
   examForm: FormGroup;
   matcher = new FormErrorStateMatcher();
 
+  private url = '/teacher/exam';
+
   constructor(
     private authService: AuthService,
     private examService: ExamService,
@@ -56,6 +58,6 @@ export class ExamDetailNoStartedComponent implements OnInit {
   delete() {}
 
   goBack() {
-    this.router.navigate(['/teacher/exam']);
+    this.router.navigate([this.url]);
   }
 }

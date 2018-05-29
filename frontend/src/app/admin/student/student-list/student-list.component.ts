@@ -18,6 +18,8 @@ export class StudentListComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<StudentInfo>(true, []);
   isLoading = true;
 
+  private url = '/admin/student';
+
   constructor(private studentService: StudentService, private router: Router) {}
 
   ngOnInit() {}
@@ -55,11 +57,11 @@ export class StudentListComponent implements OnInit, AfterViewInit {
   delete() {}
 
   goCreate() {
-    this.router.navigate(['/admin/student/create']);
+    this.router.navigate([`${this.url}/create`]);
   }
 
   goDetail(x: StudentInfo) {
     this.studentService.currentStudentInfo = x;
-    this.router.navigate([`/admin/student/${x.id}`]);
+    this.router.navigate([`${this.url}/${x.id}`]);
   }
 }

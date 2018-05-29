@@ -87,7 +87,6 @@ export class StudentCreateMultiComponent implements OnInit {
   }
 
   delete() {
-    const data = new Set(this.dataSource.data);
     const select = new Set(this.selection.selected);
     this.dataSource.data = this.dataSource.data.filter(x => !select.has(x));
     this.selection.clear();
