@@ -2,6 +2,8 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { ExamInfo } from '../student/exam/exam-info.model';
 import { ExamState } from '../student/exam/exam-state.enum';
 import { StudentInfo } from '../admin/student/student-info.model';
+import { TeacherInfo } from '../admin/teacher/teacher.model';
+import { UserType } from './auth/user.model';
 
 export class InMemoryDataService extends InMemoryDbService {
   createDb() {
@@ -30,8 +32,12 @@ export class InMemoryDataService extends InMemoryDbService {
       }
     ];
     const students: StudentInfo[] = [
-      { id: 1, userName: 's@w.a', name: 'student' }
+      { id: 3, userName: 's@w.a', name: 'student' }
     ];
-    return { exams, students };
+    const teachers: TeacherInfo[] = [
+      { id: 1, userName: 'a@w.a', name: 'admin', userType: UserType.admin },
+      { id: 2, userName: 't@w.a', name: 'teacher', userType: UserType.teacher }
+    ];
+    return { exams, students, teachers };
   }
 }

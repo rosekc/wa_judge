@@ -1,7 +1,7 @@
 export enum UserType {
-  student,
+  admin,
   teacher,
-  admin
+  student
 }
 
 export interface User {
