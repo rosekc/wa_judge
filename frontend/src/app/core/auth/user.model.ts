@@ -1,4 +1,8 @@
-import { UserType } from './user-type.enum';
+export enum UserType {
+  student,
+  teacher,
+  admin
+}
 
 export interface User {
   id: number;

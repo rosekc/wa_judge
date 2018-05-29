@@ -3,8 +3,7 @@ import { Observable, of } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 
 import { AuthModule } from './auth.module';
-import { User, Users } from './user.model';
-import { UserType } from './user-type.enum';
+import { User, UserType, Users } from './user.model';
 
 @Injectable({
   providedIn: 'root'

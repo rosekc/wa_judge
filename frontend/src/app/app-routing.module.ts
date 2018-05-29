@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/auth/auth.guard';
-import { UserType } from './core/auth/user-type.enum';
+import { UserType } from './core/auth/user.model';
 import { TestGuard } from './test/test.guard';
 
 const routes: Routes = [

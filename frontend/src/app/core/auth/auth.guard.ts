@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs';
 
 import { AuthService } from './auth.service';
-import { UserType } from './user-type.enum';
+import { UserType } from './user.model';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanLoad {
