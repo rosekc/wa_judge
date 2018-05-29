@@ -1,9 +1,8 @@
 import os
-from datetime import datetime
 
 from flask import g, request
 from flask_restful import Resource
-from flask_uploads import ARCHIVES, DOCUMENTS, TEXT, UploadNotAllowed
+from flask_uploads import ARCHIVES, DOCUMENTS, TEXT
 from marshmallow import ValidationError
 
 from .. import db, ma
@@ -11,7 +10,7 @@ from ..models import Contest
 from ..utils.decorators import check_authentication, get_args
 from ..utils.errors import (forbidden, not_found, unauthorized,
                             unprocessable_entity)
-from ..utils.helpers import ExtendModelConverter, UploadSet
+from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
 from .auth import auth
 
 problem_sets = UploadSet('problemsets', TEXT + DOCUMENTS + ARCHIVES)
@@ -118,7 +117,8 @@ class ContestProblemSetApi(Resource):
             return not_found()
         if g.current_user.id != contest.owner_user_id:
             return unauthorized('not owner of this contest')
-        return self.get_and_save_file(contest, request.files)
+        return get_and_save_file(request.files['problem_set'], contest.name,
+                                 contest, 'problem_set_filename', problem_sets)
 
     @check_authentication(auth, login_required=True)
     @get_args('contest_id')
@@ -135,26 +135,3 @@ class ContestProblemSetApi(Resource):
         db.session.add(contest)
         db.session.commit()
         return {'message': 'OK'}, 200
-
-    def get_and_save_file(self, contest, files):
-        if 'problem_set' not in files:
-            return unprocessable_entity('problem_set is required.')
-        try:
-            filename = self.get_filename(contest.name, files)
-            filename = problem_sets.save(
-                files['problem_set'], name=filename)
-        except UploadNotAllowed:
-            return unprocessable_entity('this type of file is not allow')
-        if contest.problem_set_filename:
-            path = problem_sets.path(contest.problem_set_filename)
-            if path and os.path.exists(path):
-                os.remove(path)
-        contest.problem_set_filename = filename
-        db.session.add(contest)
-        db.session.commit()
-        return {'message': 'OK'}, 200
-
-    def get_filename(self, contest_name, files):
-        return '.'.join(
-            ['_'.join([contest_name.lower().replace(' ', '_'), datetime.utcnow().strftime('%y%m%d%H%M%S')]),
-             files['problem_set'].filename.split('.')[-1]])
