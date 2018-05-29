@@ -56,6 +56,7 @@ export class StudentCreateSingleComponent implements OnInit {
       ]),
       password: new FormControl(this.studentService.currentStudentInfo.password, [
         Validators.required,
+        Validators.minLength(6),
         Validators.maxLength(32),
         Validators.pattern(/\S+/)
       ])

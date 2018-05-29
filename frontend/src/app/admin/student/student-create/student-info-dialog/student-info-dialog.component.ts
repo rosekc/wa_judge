@@ -41,6 +41,7 @@ export class StudentInfoDialogComponent implements OnInit {
       ]),
       password: new FormControl(this.data.password, [
         Validators.required,
+        Validators.minLength(6),
         Validators.maxLength(32),
         Validators.pattern(/\S+/)
       ])

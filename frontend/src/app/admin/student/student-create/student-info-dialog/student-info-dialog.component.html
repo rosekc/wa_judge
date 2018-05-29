@@ -35,8 +35,8 @@
         <mat-error *ngIf="studentForm.get('password').hasError('pattern') && !studentForm.get('password').hasError('required')">
           请输入无空字符的初始密码
         </mat-error>
-        <mat-error *ngIf="!studentForm.get('password').hasError('required') && !studentForm.get('password').hasError('maxLength')">
-          请输入长度不大于32个字符的初始密码
+        <mat-error *ngIf="!studentForm.get('password').hasError('required') && (!studentForm.get('password').hasError('maxLength') || studentForm.get('password').hasError('minLength'))">
+          请输入长度为6到32的初始密码
         </mat-error>
         <mat-error *ngIf="studentForm.get('password').hasError('required')">
           初始密码是

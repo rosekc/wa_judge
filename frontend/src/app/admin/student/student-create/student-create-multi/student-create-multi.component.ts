@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatDialog, MatTableDataSource, MatCell } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 
 import { DialogService } from '../../../../shared/dialog/dialog.service';
 import { StudentInfo, StudentInfoWithSymbol } from '../../student-info.model';
@@ -79,6 +79,7 @@ export class StudentCreateMultiComponent implements OnInit {
         for (let i = 0; i < data.length; i++) {
           if (data[i].sid === x.sid) {
             data[i] = x;
+            break;
           }
         }
         this.dataSource.data = data;

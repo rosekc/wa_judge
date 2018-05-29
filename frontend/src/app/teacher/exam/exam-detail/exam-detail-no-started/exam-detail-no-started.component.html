@@ -9,7 +9,7 @@
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
           <mat-form-field class="examFormControl">
             <mat-label>名称</mat-label>
-            <input matInput placeholder="请输入考试名称" type="text" required formControlName="name" [errorStateMatcher]="matcher">
+            <input matInput placeholder="请输入考试名称" type="text" required formControlName="name" [errorStateMatcher]="matcher" required>
             <mat-error *ngIf="!examForm.get('name').hasError('required') && (examForm.get('name').hasError('mixLength') || !examForm.get('name').hasError('maxLength'))">
               请输入一个长度为3到255的名称
             </mat-error>
@@ -24,7 +24,7 @@
             <mat-datetimepicker-toggle [for]="startDTP" matSuffix></mat-datetimepicker-toggle>
             <mat-datetimepicker #startDTP type="datetime" openOnFocus="true" timeInterval="1"></mat-datetimepicker>
             <input matInput placeholder="请输入开始时间" autocomplete="false" required formControlName="startTime" [matDatetimepicker]="startDTP"
-              [errorStateMatcher]="matcher">
+              [errorStateMatcher]="matcher" required>
             <mat-error *ngIf="!examForm.get('startTime').hasError('required') && examForm.get('startTime').invalid">
               请输入一个合法的时间
             </mat-error>
@@ -39,7 +39,7 @@
             <mat-datetimepicker-toggle [for]="endDTP" matSuffix></mat-datetimepicker-toggle>
             <mat-datetimepicker #endDTP type="datetime" openOnFocus="true" timeInterval="1"></mat-datetimepicker>
             <input matInput placeholder="请输入结束时间" autocomplete="false" required formControlName="endTime" [matDatetimepicker]="endDTP"
-              [errorStateMatcher]="matcher">
+              [errorStateMatcher]="matcher" required>
             <mat-error *ngIf="!examForm.get('endTime').hasError('required') && examForm.get('endTime').invalid">
               请输入一个合法的时间
             </mat-error>

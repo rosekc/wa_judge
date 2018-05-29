@@ -12,7 +12,8 @@
           <form (ngSubmit)="save()" [formGroup]="studentForm">
             <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px">
               <mat-form-field class="studentFormControl">
-                <input #userNameBox matInput placeholder="用户名" formControlName="userName" [errorStateMatcher]="matcher" [readOnly]="isFormLoading">
+                <input #userNameBox matInput placeholder="用户名" formControlName="userName" [errorStateMatcher]="matcher" [readOnly]="isFormLoading"
+                  required>
                 <mat-error *ngIf="studentForm.get('userName').hasError('pattern') && !studentForm.get('userName').hasError('required')">
                   请输入无空字符的用户名
                 </mat-error>
@@ -26,7 +27,8 @@
               </mat-form-field>
 
               <mat-form-field class="studentFormControl">
-                <input matInput placeholder="姓名" formControlName="name" type="text" [errorStateMatcher]="matcher" [readOnly]="isFormLoading">
+                <input matInput placeholder="姓名" formControlName="name" type="text" [errorStateMatcher]="matcher" [readOnly]="isFormLoading"
+                  required>
                 <mat-error *ngIf="studentForm.get('name').hasError('pattern') && !studentForm.get('name').hasError('required')">
                   请输入无空字符的姓名
                 </mat-error>
