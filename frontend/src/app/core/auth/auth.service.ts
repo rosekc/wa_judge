@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 
 import { AuthModule } from './auth.module';
-import { User, UserType, Users } from './user.model';
+import { User, StudentUser, TeacherUser, UserType, StudentUsers, TeacherUsers } from './user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,19 +11,22 @@ import { User, UserType, Users } from './user.model';
 export class AuthService {
   user: User;
   isLoggedIn = false;
-
   redirectUrl: string;
+
   constructor() {
     const token = localStorage.getItem('access_token');
     if (token) {
-      this.user = Users.find((x: User) => x.userName === token);
+      this.user = TeacherUsers.find((x: TeacherUser) => x.userName === token);
+      if (!this.user) {
+        this.user = StudentUsers.find((x: StudentUser) => x.studentId === token);
+      }
       this.isLoggedIn = true;
       this.resetRedirectUrl();
     }
   }
 
-  login({ userName, password }: { userName: string; password: string }): Observable<boolean> {
-    const user = Users.find((x: User) => x.userName === userName);
+  teacherLogin({ userName, password }: { userName: string; password: string }): Observable<boolean> {
+    const user = TeacherUsers.find((x: TeacherUser) => x.userName === userName);
     let flag = false;
     if (user && user.userName[0] === password) {
       flag = true;
@@ -36,6 +39,26 @@ export class AuthService {
         this.user = user;
         if (val) {
           localStorage.setItem('access_token', user.userName);
+          this.resetRedirectUrl();
+        }
+      })
+    );
+  }
+
+  studentLogin({ studentId, name, contestId }: { studentId: string; name: string; contestId: string }): Observable<boolean> {
+    const user = StudentUsers.find((x: StudentUser) => x.studentId === studentId);
+    let flag = false;
+    if (user && user.name === name) {
+      flag = true;
+    }
+
+    return of(flag).pipe(
+      delay(1000),
+      tap(val => {
+        this.isLoggedIn = val;
+        this.user = user;
+        if (val) {
+          localStorage.setItem('access_token', user.studentId);
           this.resetRedirectUrl();
         }
       })
