@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../core/auth/auth.guard';
-import { ExamCreateComponent } from './exam/exam-create/exam-create.component';
-import { ExamListComponent } from './exam/exam-list/exam-list.component';
-import { ExamDetailComponent } from './exam/exam-detail/exam-detail.component';
+import { ContestCreateComponent } from './contest/contest-create/contest-create.component';
+import { ContestListComponent } from './contest/contest-list/contest-list.component';
+import { ContestDetailComponent } from './contest/contest-detail/contest-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TeacherComponent } from './teacher/teacher.component';
 
@@ -14,10 +14,10 @@ const routes: Routes = [
     component: TeacherComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'exam', pathMatch: 'full' },
-      { path: 'exam', component: ExamListComponent },
-      { path: 'exam/create', component: ExamCreateComponent },
-      { path: 'exam/:id', component: ExamDetailComponent },
+      { path: '', redirectTo: 'contest', pathMatch: 'full' },
+      { path: 'contest', component: ContestListComponent },
+      { path: 'contest/create', component: ContestCreateComponent },
+      { path: 'contest/:id', component: ContestDetailComponent },
       { path: 'settings', component: SettingsComponent }
     ]
   }

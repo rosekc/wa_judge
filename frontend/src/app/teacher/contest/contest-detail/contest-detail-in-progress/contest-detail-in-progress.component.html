@@ -1,0 +1,8 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0px">
+    <button mat-raised-button (click)="goBack()">返回</button>
+  </div>
+  <app-contest-progress [contestInfo]="contestInfo" [update]="updateContestInfo" fxFlexFill></app-contest-progress>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="0px">
+  </div>
+</div>

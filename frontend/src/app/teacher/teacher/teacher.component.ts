@@ -10,7 +10,7 @@ import { NavItem } from '../../shared/head/nav-item.model';
 })
 export class TeacherComponent implements OnInit {
   navItems: NavItem[] = [
-    { label: '考试', link: '/teacher/exam' },
+    { label: '考试', link: '/teacher/contest' },
     { label: '设置', link: '/teacher/settings' }
   ];
 

@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+    <button mat-raised-button (click)="goBack()">返回</button>
+    <button mat-raised-button color="primary" (click)="download()">下载考试答案</button>
+  </div>
+  <app-contest-progress [contestInfo]="contestInfo" [update]="updateContestInfo" fxFlexFill></app-contest-progress>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="0px">
+  </div>
+</div>
