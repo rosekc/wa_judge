@@ -1,25 +1,22 @@
 <mat-spinner *ngIf="getIsLoading()" style="margin: 0 auto"></mat-spinner>
 
 <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px" *ngIf="!getIsLoading()">
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0px">
-    <button mat-raised-button (click)="goBack()">返回</button>
-  </div>
   <div fxFlexFill>
     <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="0px">
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" fxFlexFill>
-        <h5>{{ examInfo.startTime | date:'yyyy-MM-dd HH:mm:ss' }}</h5>
-        <h1 matTooltip="由“{{ examInfo.teacherName }}”命题">{{ examInfo.name }}</h1>
-        <h5>{{ examInfo.endTime | date:'yyyy-MM-dd HH:mm:ss' }}</h5>
+        <h5>{{ contestInfo.startTime | date:'yyyy-MM-dd HH:mm:ss' }}</h5>
+        <h1 matTooltip="由“{{ contestInfo.teacherName }}”命题">{{ contestInfo.name }}</h1>
+        <h5>{{ contestInfo.endTime | date:'yyyy-MM-dd HH:mm:ss' }}</h5>
       </div>
-      <mat-progress-bar mode="determinate" [value]="examProgress"></mat-progress-bar>
-      <ng-container [ngSwitch]="examInfo.state">
+      <mat-progress-bar mode="determinate" [value]="contestProgress"></mat-progress-bar>
+      <ng-container [ngSwitch]="contestInfo.state">
         <h5 *ngSwitchCase='0'>未开始</h5>
         <h5 *ngSwitchCase='1'>{{ restTime | date:'HH:mm:ss':'+0000' }}</h5>
         <h5 *ngSwitchCase='2'>已结束</h5>
       </ng-container>
     </div>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="200px" *ngIf="examInfo.state===1">
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="200px" *ngIf="contestInfo.state===1">
     <button mat-raised-button color="primary">下载试题</button>
     <button mat-raised-button color="accent">上传答案</button>
   </div>

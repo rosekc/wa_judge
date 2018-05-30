@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../core/auth/auth.guard';
-import { ExamListComponent } from './exam/exam-list/exam-list.component';
-import { ExamDetailComponent } from './exam/exam-detail/exam-detail.component';
-import { SettingsComponent } from './settings/settings.component';
+import { ContestComponent } from './contest/contest.component';
 import { StudentComponent } from './student/student.component';
 
 const routes: Routes = [
@@ -13,10 +11,8 @@ const routes: Routes = [
     component: StudentComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'exam', pathMatch: 'full' },
-      { path: 'exam', component: ExamListComponent },
-      { path: 'exam/:id', component: ExamDetailComponent },
-      { path: 'settings', component: SettingsComponent }
+      { path: '', redirectTo: 'contest', pathMatch: 'full' },
+      { path: 'contest', component: ContestComponent }
     ]
   }
 ];

@@ -1,6 +1,5 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
-import { ExamInfo } from '../student/exam/exam-info.model';
-import { ExamState } from '../student/exam/exam-state.enum';
+import { ContestInfo } from '../student/contest/contest.model';
 import { StudentInfo } from '../admin/student/student-info.model';
 import { TeacherInfo } from '../admin/teacher/teacher.model';
 import { UserType } from './auth/user.model';
@@ -8,7 +7,7 @@ import { UserType } from './auth/user.model';
 export class InMemoryDataService extends InMemoryDbService {
   createDb() {
     const n = new Date();
-    const exams: ExamInfo[] = [
+    const exams: ContestInfo[] = [
       {
         id: 1,
         name: 'exam1',
