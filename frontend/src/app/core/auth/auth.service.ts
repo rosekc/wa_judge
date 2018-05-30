@@ -18,10 +18,14 @@ export class AuthService {
     if (token) {
       this.user = TeacherUsers.find((x: TeacherUser) => x.userName === token);
       if (!this.user) {
-        this.user = StudentUsers.find((x: StudentUser) => x.studentId === token);
+        this.user = StudentUsers.find((x: StudentUser) => `${x.studentId}.${x.contestId}` === token);
       }
-      this.isLoggedIn = true;
-      this.resetRedirectUrl();
+      if (this.user) {
+        this.isLoggedIn = true;
+        this.resetRedirectUrl();
+      } else {
+        this.logout();
+      }
     }
   }
 
@@ -48,7 +52,7 @@ export class AuthService {
   studentLogin({ studentId, name, contestId }: { studentId: string; name: string; contestId: string }): Observable<boolean> {
     const user = StudentUsers.find((x: StudentUser) => x.studentId === studentId);
     let flag = false;
-    if (user && user.name === name) {
+    if (user && user.name === name && user.contestId === contestId) {
       flag = true;
     }
 
@@ -58,7 +62,7 @@ export class AuthService {
         this.isLoggedIn = val;
         this.user = user;
         if (val) {
-          localStorage.setItem('access_token', user.studentId);
+          localStorage.setItem('access_token', `${user.studentId}.${user.contestId}`);
           this.resetRedirectUrl();
         }
       })

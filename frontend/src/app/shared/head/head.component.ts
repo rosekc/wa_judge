@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { NavItem } from './nav-item.model';
+import { StudentUser } from '../../core/auth/user.model';
 
 @Component({
   selector: 'app-head',
@@ -11,6 +12,15 @@ import { NavItem } from './nav-item.model';
 })
 export class HeadComponent implements OnInit {
   @Input() navItems: NavItem[];
+
+  get group() {
+    const user = <StudentUser>this.authService.user;
+    if (user) {
+      return user.group;
+    } else {
+      return '';
+    }
+  }
 
   constructor(public authService: AuthService, private router: Router) {}
 

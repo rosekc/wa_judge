@@ -35,6 +35,9 @@
           <mat-error *ngIf="loginForm.get('contestId').hasError('pattern') && !loginForm.get('contestId').hasError('required')">
             请输入数字
           </mat-error>
+          <mat-error *ngIf="!loginForm.get('contestId').hasError('required') && (!loginForm.get('contestId').hasError('maxLength') || loginForm.get('contestId').hasError('minLength'))">
+            请输入长度为4到63的考试码
+          </mat-error>
           <mat-error *ngIf="loginForm.get('contestId').hasError('required')">
             考试码是
             <strong>必须</strong>的

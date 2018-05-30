@@ -21,7 +21,7 @@ export class TeacherLoginComponent implements OnInit {
   isLoading = false;
   matcher = new FormErrorStateMatcher();
   loginForm: FormGroup;
-  @ViewChild('studentIdBox') userNameBox;
+  @ViewChild('userNameBox') userNameBox;
 
   constructor(
     private authService: AuthService,

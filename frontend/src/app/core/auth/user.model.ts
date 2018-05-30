@@ -16,14 +16,22 @@ export interface TeacherUser extends User {
 
 export interface StudentUser extends User {
   studentId: string;
-  className: string;
+  group: string;
+  contestId: string;
 }
 
 export const TeacherUsers: Array<TeacherUser> = [
-  { id: 1, userName: 'a@w.a', name: 'admin', userType: UserType.admin },
-  { id: 2, userName: 't@w.a', name: 'teacher', userType: UserType.teacher }
+  { id: 1, userName: 'admin', name: 'admin', userType: UserType.admin },
+  { id: 2, userName: 'teacher', name: 'teacher', userType: UserType.teacher }
 ];
 
 export const StudentUsers: Array<StudentUser> = [
-  { id: 3, studentId: '123', name: 'student', className: '15-1', userType: UserType.student }
+  {
+    id: 3,
+    studentId: '123',
+    name: 'student',
+    group: '15-1',
+    contestId: '1234',
+    userType: UserType.student
+  }
 ];

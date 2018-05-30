@@ -13,7 +13,10 @@
       </nav>
     </div>
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0px">
-      <button class="head-label" mat-button>{{authService.user.name}}</button>
+      <ng-container [ngSwitch]="authService.user.userType">
+        <button class="head-label" *ngSwitchCase="2" matTooltip="{{group}}" mat-button>{{authService.user.name}}</button>
+        <button class="head-label" *ngSwitchDefault mat-button>{{authService.user.name}}</button>
+      </ng-container>
       <button class="head-label" mat-button color="warn" (click)="logout()">注销</button>
     </div>
   </div>
