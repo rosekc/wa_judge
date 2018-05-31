@@ -4,9 +4,10 @@ from flask import g, request
 from flask_restful import Resource
 from flask_uploads import ARCHIVES, DOCUMENTS, TEXT
 from marshmallow import ValidationError
+from werkzeug.exceptions import BadRequestKeyError
 
 from .. import db, ma
-from ..models import Contest
+from ..models import Contest, Submission
 from ..utils.decorators import check_authentication, get_args
 from ..utils.errors import (forbidden, not_found, unauthorized,
                             unprocessable_entity)
@@ -14,6 +15,8 @@ from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
 from .auth import auth
 
 problem_sets = UploadSet('problemsets', TEXT + DOCUMENTS + ARCHIVES)
+submission_files = UploadSet(
+    'submissionfiles', TEXT + DOCUMENTS + ARCHIVES)
 
 
 class ContestSchema(ma.ModelSchema):
@@ -135,3 +138,74 @@ class ContestProblemSetApi(Resource):
         db.session.add(contest)
         db.session.commit()
         return {'message': 'OK'}, 200
+
+
+class SubmissionSchema(ma.ModelSchema):
+    class Meta:
+        model = Submission
+        strict = True
+        fields = ('id', 'author', 'contest', 'submit_time')
+
+
+class SubmissionApi(Resource):
+    submission_schema = SubmissionSchema()
+
+    @get_args('submission_id', 'page', required=False)
+    def get(self, submission_id=None, page=None):
+        if submission_id is None:
+            if page is None:
+                page = 1
+            pagination = Submission.query.paginate(
+                page, per_page=10,
+                error_out=False)
+            contests = pagination.items
+            return {
+                'submissions': self.submission_schema.dump(contests, many=True).data,
+                'has_prev': pagination.has_prev,
+                'has_next': pagination.has_next,
+                'count': pagination.total
+            }
+        submission = Submission.query.filter_by(id=submission_id).first()
+        if submission is None:
+            return not_found()
+        json_data = self.submission_schema.dump(submission)
+        return json_data
+
+    @check_authentication(auth, login_required=True)
+    def post(self):
+        try:
+            json_data = request.get_json()
+            if json_data is None:
+                return unprocessable_entity('empty input')
+            data = self.submission_schema.load(json_data).data
+        except (ValidationError, AttributeError) as err:
+            return unprocessable_entity(getattr(err, 'messages', 'AttributeError'))
+        data.author = g.current_user
+        db.session.add(data)
+        db.session.commit()
+
+
+class SubmissionFileApi(Resource):
+    @check_authentication(auth, login_required=True)
+    @get_args('submission_id', required=True)
+    def get(self, submission_id):
+        submission = Submission.query.filter_by(id=submission_id).first()
+        if submission is None or submission.uploaded_filename is None:
+            return not_found()
+        if g.current_user.id != submission.author_id:
+            return unauthorized('not owner of this submission')
+        return submission_files.send_file(submission.uploaded_filename, as_attachment=True)
+
+    @check_authentication(auth, login_required=True)
+    @get_args('submission_id', required=True)
+    def put(self, submission_id):
+        submission = Submission.query.filter_by(id=submission_id).first()
+        if submission is None:
+            return not_found()
+        if g.current_user.id != submission.author_id:
+            return unauthorized('not owner of this submission')
+        try:
+            return get_and_save_file(request.files['submission_file'], '_'.join([str(submission.id), str(submission.author.id)]),
+                                     submission, 'uploaded_filename', submission_files)
+        except BadRequestKeyError:
+            return unprocessable_entity('key error')

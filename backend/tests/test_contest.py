@@ -100,6 +100,11 @@ class ContestTestCase(unittest.TestCase):
             })
             self.assertEqual(res.status_code, 200)
 
+            res = c.put('/apiv1/contests/1/problem_set', headers=auth_headers(), data={
+                'problem_set': (io.BytesIO(test_msg), 'test.txt')
+            })
+            self.assertEqual(res.status_code, 200)
+
             res = c.get('/apiv1/contests/1/problem_set',
                         headers=auth_headers())
             self.assertEqual(res.status_code, 200)
@@ -138,3 +143,52 @@ class ContestTestCase(unittest.TestCase):
             res = c.delete('/apiv1/contests/1/problem_set',
                            headers=auth_headers())
             self.assertEqual(res.status_code, 200)
+
+    def test_submission(self):
+        with self.app.test_client() as c:
+            test_msg = b'abababaababa(;o;_;o;)'
+            test_msg2 = b'abababa(;o;_;o;)'
+            res = c.get('/apiv1/submissions/1', headers=auth_headers())
+            self.assertEqual(res.status_code, 404)
+            datas = {
+                'author_id': 1,
+                'contest_id': 1,
+            }
+
+            res = c.post('/apiv1/submissions/',
+                         headers=auth_headers(), json=datas)
+            self.assertEqual(res.status_code, 200)
+
+            res = c.get('/apiv1/submissions/1')
+            self.assertEqual(res.status_code, 200)
+
+            res = c.get('/apiv1/submissions/1/submission_file',
+                        headers=auth_headers())
+            self.assertEqual(res.status_code, 404)
+
+            res = c.put('/apiv1/submissions/1/submission_file', headers=auth_headers(), data={
+                'submission_file': (io.BytesIO(test_msg), 'test.txt')
+            })
+            self.assertEqual(res.status_code, 200)
+
+            res = c.get('/apiv1/submissions/1/submission_file',
+                        headers=auth_headers('wawa', 'wawa'))
+            self.assertEqual(res.status_code, 401)
+
+            res = c.get('/apiv1/submissions/1/submission_file',
+                        headers=auth_headers())
+            self.assertEqual(res.status_code, 200)
+            self.assertIsNotNone(res.headers.get('Content-Disposition', None))
+            self.assertEqual(res.data, test_msg)
+
+            res = c.put('/apiv1/submissions/1/submission_file',
+                        headers=auth_headers(), data={
+                            'submission_file': (io.BytesIO(test_msg2), 'test.txt')
+                        })
+            self.assertEqual(res.status_code, 200)
+
+            res = c.get('/apiv1/submissions/1/submission_file',
+                        headers=auth_headers())
+            self.assertEqual(res.status_code, 200)
+            self.assertIsNotNone(res.headers.get('Content-Disposition', None))
+            self.assertEqual(res.data, test_msg2)

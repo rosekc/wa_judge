@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, current_app, abort
-from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
+from flask import Flask, abort, current_app
 from flask_marshmallow import Marshmallow
+from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
 from flask_uploads import configure_uploads, send_from_directory
 
 from .config import config
@@ -37,16 +37,21 @@ def create_app(config_name='development', test_config=None):
     from .apiv1.auth import TokenApi, UserApi
     api.add_resource(TokenApi, '/token')
     api.add_resource(UserApi,  '/users/', '/users/<int:user_id>')
-    from .apiv1.contest import ContestApi, ContestProblemSetApi
+    from .apiv1.contest import ContestApi, ContestProblemSetApi, SubmissionApi, SubmissionFileApi
     api.add_resource(ContestApi,  '/contests/', '/contests/<int:contest_id>')
     api.add_resource(ContestProblemSetApi,
                      '/contests/<int:contest_id>/problem_set')
+    api.add_resource(SubmissionApi, '/submissions/',
+                     '/submissions/<int:submission_id>')
+    api.add_resource(SubmissionFileApi,
+                     '/submissions/<int:submission_id>/submission_file')
     api.init_app(app)
 
     app.config['UPLOADS_DEFAULT_DEST'] = app.instance_path
 
-    from .apiv1.contest import problem_sets
+    from .apiv1.contest import problem_sets, submission_files
     configure_uploads(app, problem_sets)
+    configure_uploads(app, submission_files)
 
     return app
 
