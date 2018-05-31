@@ -43,5 +43,6 @@ venv
 
 .vscode
 .pylintrc
+.idea
 
 instance
