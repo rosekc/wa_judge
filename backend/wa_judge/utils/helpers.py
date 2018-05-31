@@ -44,11 +44,11 @@ def get_and_save_file(file, filename, row, filename_field_name, upload_set):
             file, name=filename)
     except UploadNotAllowed:
         return unprocessable_entity('this type of file is not allow')
-    old_filename = getattr(row, filename_field_name)
-    if old_filename:
-        path = upload_set.path(old_filename)
-        if path and os.path.exists(path):
-            os.remove(path)
+    # old_filename = getattr(row, filename_field_name)
+    # if old_filename:
+    #     path = upload_set.path(old_filename)
+    #     if path and os.path.exists(path):
+    #         os.remove(path)
     setattr(row, filename_field_name, filename)
     db.session.add(row)
     db.session.commit()
