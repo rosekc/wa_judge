@@ -8,7 +8,7 @@ export interface ContestInfo {
   id: number;
   name: string;
   teacherName: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: number;
+  endTime: number;
   state?: ContestState;
 }

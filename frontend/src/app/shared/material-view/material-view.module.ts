@@ -8,6 +8,7 @@ import {
   MatDatepickerModule,
   MatDialogModule,
   MatDividerModule,
+  MatIconModule,
   MatInputModule,
   MatPaginatorModule,
   MatProgressBarModule,
@@ -19,6 +20,7 @@ import {
   MatTabsModule,
   MatTooltipModule,
   MatToolbarModule,
+  MatIcon,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
@@ -53,6 +55,7 @@ import {
     MatDatetimepickerModule,
     MatDialogModule,
     MatDividerModule,
+    MatIconModule,
     MatInputModule,
     MatMomentDateModule,
     MatMomentDatetimeModule,

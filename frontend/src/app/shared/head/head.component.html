@@ -13,7 +13,7 @@
       </nav>
     </div>
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0px">
-      <ng-container [ngSwitch]="authService.user.userType">
+      <ng-container [ngSwitch]="authService.user.userType?authService.user.userType:0">
         <button class="head-label" *ngSwitchCase="2" matTooltip="{{group}}" mat-button>{{authService.user.name}}</button>
         <button class="head-label" *ngSwitchDefault mat-button>{{authService.user.name}}</button>
       </ng-container>

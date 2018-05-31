@@ -7,27 +7,48 @@ import { UserType } from './auth/user.model';
 export class InMemoryDataService extends InMemoryDbService {
   createDb() {
     const n = new Date();
+    const ny = new Date(new Date(n).setDate(n.getDate() - 1));
+    const nt = new Date(new Date(n).setDate(n.getDate() + 1));
+    function format(num: number) {
+      if (num < 10) {
+        return `0${num}`;
+      } else {
+        return `${num}`;
+      }
+    }
     const contests: ContestInfo[] = [
       {
         id: 1,
         name: 'contest1',
         teacherName: 'Mr.V',
-        startTime: new Date(`2018-05-${n.getDate() + 1}T09:00:00.000+08:00`),
-        endTime: new Date(`2018-05-${n.getDate() + 1}T14:00:00.000+08:00`)
+        startTime: new Date(
+          `${nt.getFullYear()}-${format(nt.getMonth() + 1)}-${format(nt.getDate())}T09:00:00.000+08:00`
+        ).getTime(),
+        endTime: new Date(
+          `${nt.getFullYear()}-${format(nt.getMonth() + 1)}-${format(nt.getDate())}T14:00:00.000+08:00`
+        ).getTime()
       },
       {
         id: 2,
         name: 'contest2',
         teacherName: 'Mr.O',
-        startTime: new Date(`2018-05-${n.getDate() - 1}T00:00:00.000+08:00`),
-        endTime: new Date(`2018-05-${n.getDate() + 1}T00:00:00.000+08:00`)
+        startTime: new Date(
+          `${ny.getFullYear()}-${format(ny.getMonth() + 1)}-${format(ny.getDate())}T00:00:00.000+08:00`
+        ).getTime(),
+        endTime: new Date(
+          `${nt.getFullYear()}-${format(nt.getMonth() + 1)}-${format(nt.getDate())}T00:00:00.000+08:00`
+        ).getTime()
       },
       {
         id: 3,
         name: 'contest3',
         teacherName: 'Mr.I',
-        startTime: new Date(`2018-05-${n.getDate() - 1}T09:00:00.000+08:00`),
-        endTime: new Date(`2018-05-${n.getDate() - 1}T14:00:00.000+08:00`)
+        startTime: new Date(
+          `${ny.getFullYear()}-${format(ny.getMonth() + 1)}-${format(ny.getDate())}T09:00:00.000+08:00`
+        ).getTime(),
+        endTime: new Date(
+          `${ny.getFullYear()}-${format(ny.getMonth() + 1)}-${format(ny.getDate())}T14:00:00.000+08:00`
+        ).getTime()
       }
     ];
     const students: StudentInfo[] = [
