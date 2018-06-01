@@ -4,6 +4,7 @@ import { catchError, finalize, map, startWith, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { ContestInfo, ContestState } from './contest.model';
+import { SubmissionFile } from './contest-submission/submission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,12 @@ export class ContestService {
         this.contestInfo = data;
       })
     );
+  }
+
+  getNotice() { }
+
+  getSubmissionFileList() {
+    return this.http.get<SubmissionFile[]>(`/api/submissionfile`);
   }
 
   updateCurrentContestInfo() {

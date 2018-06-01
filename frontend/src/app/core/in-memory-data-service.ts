@@ -1,6 +1,7 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { ContestInfo } from '../student/contest/contest.model';
 import { StudentInfo } from '../admin/student/student-info.model';
+import { SubmissionFile } from '../student/contest/contest-submission/submission.model';
 import { TeacherInfo } from '../admin/teacher/teacher.model';
 import { UserType } from './auth/user.model';
 
@@ -58,6 +59,9 @@ export class InMemoryDataService extends InMemoryDbService {
       { id: 1, userName: 'a@w.a', name: 'admin', userType: UserType.admin },
       { id: 2, userName: 't@w.a', name: 'teacher', userType: UserType.teacher }
     ];
-    return { contest: contests, students, teachers };
+    const submissionFiles: SubmissionFile[] = [
+      { id: 1, name: 'file1' }
+    ];
+    return { contest: contests, students, teachers, submissionfile: submissionFiles };
   }
 }
