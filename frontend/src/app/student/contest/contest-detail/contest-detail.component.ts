@@ -1,21 +1,24 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { isNumber } from 'util';
 
-import { AuthService } from '../../core/auth/auth.service';
-import { ContestInfo, ContestState } from './contest.model';
-import { ContestService } from './contest.service';
-import { StudentUser } from '../../core/auth/user.model';
+import { ContestInfo, ContestState } from '../contest.model';
+import { ContestService } from '../contest.service';
+import { StudentUser } from '../../../core/auth/user.model';
 
 @Component({
-  selector: 'app-contest',
-  templateUrl: './contest.component.html',
-  styleUrls: ['./contest.component.css']
+  selector: 'app-contest-detail',
+  templateUrl: './contest-detail.component.html',
+  styleUrls: ['./contest-detail.component.css']
 })
-export class ContestComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContestDetailComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   totalTime: number;
   restTime: number;
 
   private timer;
+  private url = '/student/contest';
 
   get contestInfo(): ContestInfo {
     return this.contestService.contestInfo;
@@ -26,8 +29,9 @@ export class ContestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private authService: AuthService,
-    private contestService: ContestService
+    private contestService: ContestService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -48,6 +52,10 @@ export class ContestComponent implements OnInit, AfterViewInit, OnDestroy {
     return !this.contestInfo && this.isLoading;
   }
 
+  goBack() {
+    this.router.navigate([this.url]);
+  }
+
   private updateContestInfo() {
     this.timer = setInterval(() => {
       const e = new Date(this.contestInfo.endTime).getTime();
@@ -59,24 +67,30 @@ export class ContestComponent implements OnInit, AfterViewInit, OnDestroy {
         clearInterval(this.timer);
       }
     }, 1000);
-    this.totalTime =
-      new Date(this.contestInfo.endTime).getTime() -
-      new Date(this.contestInfo.startTime).getTime();
+    this.totalTime = this.contestInfo.endTime - this.contestInfo.startTime;
     this.isLoading = false;
   }
 
   private initContestInfo() {
     if (!this.contestService.contestInfo) {
-      this.contestService
-        .getContest((<StudentUser>this.authService.user).contestId)
-        .subscribe(
+      const id = this.route.snapshot.paramMap.get('id');
+      const nid = Number(id);
+      if (isNumber(nid) && !isNaN(nid)) {
+        this.contestService.getContest(Number.parseInt(id)).subscribe(
           x => {
-            this.updateContestInfo();
+            if (x) {
+              this.updateContestInfo();
+            } else {
+              this.goBack();
+            }
           },
           error => {
-            this.authService.logout();
+            this.goBack();
           }
         );
+      } else {
+        this.goBack();
+      }
     } else {
       this.updateContestInfo();
     }

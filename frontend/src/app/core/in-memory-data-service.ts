@@ -1,7 +1,7 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { ContestInfo } from '../student/contest/contest.model';
 import { StudentInfo } from '../admin/student/student-info.model';
-import { SubmissionFile } from '../student/contest/contest-submission/submission.model';
+import { SubmissionFile } from '../student/contest/contest-detail/contest-submission/submission.model';
 import { TeacherInfo } from '../admin/teacher/teacher.model';
 import { UserType } from './auth/user.model';
 
@@ -21,6 +21,7 @@ export class InMemoryDataService extends InMemoryDbService {
       {
         id: 1,
         name: 'contest1',
+        teacherName: 'Mr.V',
         startTime: new Date(
           `${nt.getFullYear()}-${format(nt.getMonth() + 1)}-${format(nt.getDate())}T09:00:00.000+08:00`
         ).getTime(),
@@ -32,6 +33,7 @@ export class InMemoryDataService extends InMemoryDbService {
       {
         id: 2,
         name: 'contest2',
+        teacherName: 'Mr.O',
         startTime: new Date(
           `${ny.getFullYear()}-${format(ny.getMonth() + 1)}-${format(ny.getDate())}T00:00:00.000+08:00`
         ).getTime(),
@@ -43,6 +45,7 @@ export class InMemoryDataService extends InMemoryDbService {
       {
         id: 3,
         name: 'contest3',
+        teacherName: 'Mr.I',
         startTime: new Date(
           `${ny.getFullYear()}-${format(ny.getMonth() + 1)}-${format(ny.getDate())}T09:00:00.000+08:00`
         ).getTime(),

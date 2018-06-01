@@ -4,7 +4,7 @@ import { catchError, finalize, map, startWith, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { ContestInfo, ContestState } from './contest.model';
-import { SubmissionFile } from './contest-submission/submission.model';
+import { SubmissionFile } from './contest-detail/contest-submission/submission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +15,22 @@ export class ContestService {
 
   constructor(private http: HttpClient) {}
 
-  getContest(id: string) {
-    return this.http.get<ContestInfo>(`${this.contestUrl}/2`).pipe(
+  getContest(id: number) {
+    return this.http.get<ContestInfo>(`${this.contestUrl}/${id}`).pipe(
       map(data => {
         return this.updateContestState(data);
       }),
       tap(data => {
         this.contestInfo = data;
+      })
+    );
+  }
+
+  getContestList() {
+    return this.http.get<ContestInfo[]>(this.contestUrl).pipe(
+      startWith(Array<ContestInfo>()),
+      map(data => {
+        return data.map(this.updateContestState);
       })
     );
   }

@@ -3,18 +3,20 @@ import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { catchError, finalize, map, startWith } from 'rxjs/operators';
 
-import { SubmissionFile } from './submission.model';
+import { ContestInfo } from '../contest.model';
 import { ContestService } from '../contest.service';
 
 @Component({
-  selector: 'app-contest-submission',
-  templateUrl: './contest-submission.component.html',
-  styleUrls: ['./contest-submission.component.css']
+  selector: 'app-contest-list',
+  templateUrl: './contest-list.component.html',
+  styleUrls: ['./contest-list.component.css']
 })
-export class ContestSubmissionComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['name', 'id'];
-  dataSource = new MatTableDataSource<SubmissionFile>();
+export class ContestListComponent implements OnInit, AfterViewInit {
+  displayedColumns = ['name', 'teacherName', 'startTime', 'endTime', 'state'];
+  dataSource = new MatTableDataSource();
   isLoading = true;
+
+  private url = '/student/contest';
 
   constructor(private contestService: ContestService, private router: Router) {}
 
@@ -23,7 +25,7 @@ export class ContestSubmissionComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.isLoading = true;
     this.contestService
-      .getSubmissionFileList()
+      .getContestList()
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -34,11 +36,8 @@ export class ContestSubmissionComponent implements OnInit, AfterViewInit {
       });
   }
 
-  isUploaded() {
-    return this.dataSource.data.length > 0;
+  goContestDetail(x: ContestInfo) {
+    this.contestService.contestInfo = x;
+    this.router.navigate([`${this.url}/${x.id}`]);
   }
-
-  upload() {}
-
-  reUpload(x: SubmissionFile) {}
 }
