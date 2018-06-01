@@ -7,8 +7,8 @@ export enum ContestState {
 export interface ContestInfo {
   id: number;
   name: string;
-  teacherName: string;
   startTime: number;
   endTime: number;
+  notice?: string;
   state?: ContestState;
 }
