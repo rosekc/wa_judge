@@ -1,3 +1,5 @@
+import { ContestStudentInfo } from './contest-student/contest-student.model';
+
 export enum ContestState {
   NoStarted,
   InProgress,
@@ -11,5 +13,6 @@ export interface ContestInfo {
   startTime?: number;
   endTime?: number;
   notice?: string;
+  students?: ContestStudentInfo[];
   state?: ContestState;
 }

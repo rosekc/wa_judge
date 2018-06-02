@@ -6,7 +6,7 @@
     </div>
     <mat-vertical-stepper [linear]="true" #stepper>
       <mat-step label="输入考试的基本信息" [stepControl]="contestForm">
-        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
+        <div class="matStepContent" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="25px">
             <mat-form-field class="contestFormControl">
               <mat-label>名称</mat-label>
@@ -58,14 +58,17 @@
       </mat-step>
 
       <mat-step label="选择参加考试的学生">
+        <div class="matStepContent" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0px">
+          <app-contest-student-create #studentCreate></app-contest-student-create>
+        </div>
       </mat-step>
 
       <mat-step label="确认">
-        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="12.5px">
+        <div class="matStepContent" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="12.5px">
           <p>请在确认好后请点击右上角的“保存”。</p>
-          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0px" fxFlexFill>
-            <button mat-raised-button color="warn" (click)="stepper.reset()">重置</button>
-          </div>
+          <p>如有需要可以
+            <button mat-raised-button color="warn" (click)="reset()">重置</button>
+          </p>
         </div>
       </mat-step>
     </mat-vertical-stepper>

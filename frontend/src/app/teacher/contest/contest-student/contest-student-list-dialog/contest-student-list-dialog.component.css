@@ -1,0 +1,12 @@
+.matDialogContent {
+  padding-bottom: 25px;
+}
+
+.table-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  max-height: 300px;
+  min-width: 350px;
+  overflow: auto;
+}

@@ -7,8 +7,8 @@ import {
   ContestStudentInfo,
   LoginType,
   SubmitType
-} from './contest-student.model';
-import { ContestService } from '../contest.service';
+} from '../contest-student.model';
+import { ContestService } from '../../contest.service';
 
 @Component({
   selector: 'app-contest-student-info',

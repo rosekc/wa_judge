@@ -9,10 +9,15 @@ export enum SubmitType {
 }
 
 export interface ContestStudentInfo {
-  id: number;
+  id?: number;
   userName: string;
   name: string;
   group: string;
-  isLogged: LoginType;
-  isSubmitted: SubmitType;
+  isLogged?: LoginType;
+  isSubmitted?: SubmitType;
+}
+
+export interface ContestStudentListDialogData {
+  repeatList?: ContestStudentInfo[];
+  errorList?: ContestStudentInfo[];
 }

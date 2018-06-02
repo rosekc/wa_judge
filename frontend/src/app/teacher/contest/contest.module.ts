@@ -9,7 +9,9 @@ import { ContestDetailInProgressComponent } from './contest-detail/contest-detai
 import { ContestDetailNoStartedComponent } from './contest-detail/contest-detail-no-started/contest-detail-no-started.component';
 import { ContestListComponent } from './contest-list/contest-list.component';
 import { ContestProgressComponent } from './contest-detail/contest-progress/contest-progress.component';
-import { ContestStudentInfoComponent } from './contest-student-info/contest-student-info.component';
+import { ContestStudentCreateComponent } from './contest-student/contest-student-create/contest-student-create.component';
+import { ContestStudentInfoComponent } from './contest-student/contest-student-info/contest-student-info.component';
+import { ContestStudentListDialogComponent } from './contest-student/contest-student-list-dialog/contest-student-list-dialog.component';
 import { ContestService } from './contest.service';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -17,6 +19,7 @@ import { SharedModule } from '../../shared/shared.module';
 @NgModule({
   imports: [CommonModule, SharedModule],
   providers: [ContestService],
+  entryComponents: [ContestStudentListDialogComponent],
   declarations: [
     ContestBasicInfoComponent,
     ContestCreateComponent,
@@ -26,7 +29,9 @@ import { SharedModule } from '../../shared/shared.module';
     ContestDetailNoStartedComponent,
     ContestListComponent,
     ContestProgressComponent,
-    ContestStudentInfoComponent
+    ContestStudentCreateComponent,
+    ContestStudentInfoComponent,
+    ContestStudentListDialogComponent
   ]
 })
 export class ContestModule {}

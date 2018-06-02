@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
+import { MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { ContestService } from '../contest.service';
+import { ContestStudentCreateComponent } from '../contest-student/contest-student-create/contest-student-create.component';
+import { ContestStudentInfo } from '../contest-student/contest-student.model';
 import { FormErrorStateMatcher } from '../../../shared/form-error-state-matcher';
 
 @Component({
@@ -19,6 +22,9 @@ import { FormErrorStateMatcher } from '../../../shared/form-error-state-matcher'
   styleUrls: ['./contest-create.component.css']
 })
 export class ContestCreateComponent implements OnInit {
+  @ViewChild('stepper') stepper: MatStepper;
+  @ViewChild('studentCreate') studentCreate: ContestStudentCreateComponent;
+  studentList: ContestStudentInfo[];
   contestForm: FormGroup;
   matcher = new FormErrorStateMatcher();
 
@@ -49,11 +55,17 @@ export class ContestCreateComponent implements OnInit {
         Validators.maxLength(255)
       ]),
       startTime: new FormControl(undefined, [Validators.required]),
-      endTime: new FormControl(undefined, [Validators.required])
+      endTime: new FormControl(undefined, [Validators.required]),
+      notice: new FormControl('')
     });
   }
 
   create() {}
+
+  reset() {
+    this.studentCreate.reset();
+    this.stepper.reset();
+  }
 
   goBack() {
     this.router.navigate([this.url]);
