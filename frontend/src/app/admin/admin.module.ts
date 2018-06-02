@@ -6,8 +6,8 @@ import { AdminRoutingModule } from './admin-routing.module';
 
 import { ContestModule } from './contest/contest.module';
 import { SharedModule } from '../shared/shared.module';
-import { SettingsComponent } from './settings/settings.component';
 import { StudentModule } from './student/student.module';
+import { SettingsModule } from './settings/settings.module';
 import { TeacherModule } from './teacher/teacher.module';
 
 @NgModule({
@@ -16,9 +16,10 @@ import { TeacherModule } from './teacher/teacher.module';
     AdminRoutingModule,
     SharedModule,
     ContestModule,
+    SettingsModule,
     StudentModule,
     TeacherModule
   ],
-  declarations: [AdminComponent, SettingsComponent]
+  declarations: [AdminComponent]
 })
 export class AdminModule {}
