@@ -24,7 +24,9 @@ export class ContestDetailEndedComponent implements OnInit {
     this.contestService.updateCurrentContestInfo();
   }
 
-  download() {}
+  downloadSubmission() { }
+
+  downloadSubmissionInfo() {}
 
   goBack() {
     this.router.navigate([this.url]);
