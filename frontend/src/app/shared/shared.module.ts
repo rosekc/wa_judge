@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { DialogModule } from './dialog/dialog.module';
+import { FileModule } from './file/file.module';
 import { HeadComponent } from './head/head.component';
 import { MaterialViewModule } from './material-view/material-view.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { RouterModule } from '@angular/router';
   ],
   exports: [
     DialogModule,
+    FileModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialViewModule,

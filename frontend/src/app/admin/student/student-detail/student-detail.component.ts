@@ -61,12 +61,17 @@ export class StudentDetailComponent
       userName: new FormControl(this.studentInfo.userName, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       name: new FormControl(this.studentInfo.name, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
+      ]),
+      group: new FormControl(this.studentInfo.group, [
+        Validators.required,
+        Validators.maxLength(32),
+        Validators.pattern(/^\S+$/)
       ])
     });
     this.isLoading = false;

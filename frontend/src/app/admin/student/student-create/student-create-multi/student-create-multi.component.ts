@@ -3,6 +3,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 
 import { DialogService } from '../../../../shared/dialog/dialog.service';
+import { FileService } from '../../../../shared/file/file.service';
 import { StudentInfo, StudentInfoWithSymbol } from '../../student-info.model';
 import { StudentInfoDialogComponent } from '../student-info-dialog/student-info-dialog.component';
 import { StudentService } from '../../student.service';
@@ -13,13 +14,15 @@ import { StudentService } from '../../student.service';
   styleUrls: ['./student-create-multi.component.css']
 })
 export class StudentCreateMultiComponent implements OnInit {
-  displayedColumns = ['select', 'userName', 'name', 'password', 'sid'];
+  displayedColumns = ['select', 'userName', 'name', 'group', 'password', 'sid'];
   dataSource = new MatTableDataSource<StudentInfoWithSymbol>();
   selection = new SelectionModel<StudentInfoWithSymbol>(true, []);
   isLoading = false;
 
   constructor(
     private dialog: MatDialog,
+    private dialogService: DialogService,
+    private fileService: FileService,
     private studentService: StudentService
   ) {}
 
@@ -53,15 +56,25 @@ export class StudentCreateMultiComponent implements OnInit {
     );
   }
 
-  import() {
-    const a = this.dataSource.data;
-    a.push({
-      userName: 'new',
-      name: 'newS',
-      password: '123456',
-      sid: Symbol()
-    });
-    this.dataSource.data = a;
+  import(evt: any, fileForm: HTMLFormElement) {
+    const header = ['用户名', '姓名', '班级', '初始密码'];
+    const propertys = ['userName', 'name', 'group', 'password'];
+    const callback = (data: Array<any>, error: Error) => {
+      if (error) {
+        this.dialogService.showErrorMessage(error.message);
+        fileForm.reset();
+      } else {
+        this.dataSource.data = data.map(x => {
+          x['sid'] = Symbol();
+          return x;
+        });
+      }
+    };
+    this.fileService.readExcelFile(
+      evt,
+      { header: header, propertys: propertys },
+      callback
+    );
   }
 
   edit(x: StudentInfoWithSymbol, event: MouseEvent) {
@@ -74,6 +87,7 @@ export class StudentCreateMultiComponent implements OnInit {
         r = r as StudentInfo;
         x.userName = r.userName;
         x.name = r.name;
+        x.group = r.group;
         x.password = r.password;
         const data = this.dataSource.data;
         for (let i = 0; i < data.length; i++) {

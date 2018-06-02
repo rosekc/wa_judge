@@ -1,7 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px">
     <button mat-raised-button color="primary" (click)="create()" *ngIf="isImported()">创建</button>
-    <button mat-raised-button color="primary" (click)="import()" *ngIf="!isImported()">导入</button>
+    <form #fileForm *ngIf="!isImported()">
+      <button mat-raised-button color="primary" (click)="importInput.click()">导入</button>
+      <input hidden #importInput type="file" (change)="import($event, fileForm)" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    </form>
     <button mat-raised-button color="warn" (click)="delete()" [disabled]="!isSelected()" *ngIf="isImported()">删除</button>
   </div>
 
@@ -29,6 +32,11 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef style="width: 20%"> 姓名 </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="group">
+        <th mat-header-cell *matHeaderCellDef style="width: 20%"> 班级 </th>
+        <td mat-cell *matCellDef="let element"> {{element.group}} </td>
       </ng-container>
 
       <ng-container matColumnDef="password" style="width: 20%">

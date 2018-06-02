@@ -56,7 +56,7 @@ export class InMemoryDataService extends InMemoryDbService {
       }
     ];
     const students: StudentInfo[] = [
-      { id: 3, userName: 's@w.a', name: 'student' }
+      { id: 3, userName: 's@w.a', name: 'student', group: '15-1' }
     ];
     const teachers: TeacherInfo[] = [
       { id: 1, userName: 'a@w.a', name: 'admin', userType: UserType.admin },
