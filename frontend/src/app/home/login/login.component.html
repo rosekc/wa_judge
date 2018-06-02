@@ -7,7 +7,7 @@
           <mat-error *ngIf="loginForm.get('userName').hasError('pattern') && !loginForm.get('userName').hasError('required')">
             请输入无空字符的用户名
           </mat-error>
-          <mat-error *ngIf="!loginForm.get('userName').hasError('required') && !loginForm.get('userName').hasError('maxLength')">
+          <mat-error *ngIf="!loginForm.get('userName').hasError('required') && !loginForm.get('userName').hasError('pattern') && !loginForm.get('userName').hasError('maxLength')">
             请输入长度不大于32个字符的用户名
           </mat-error>
           <mat-error *ngIf="loginForm.get('userName').hasError('required')">
@@ -21,7 +21,7 @@
           <mat-error *ngIf="loginForm.get('password').hasError('pattern') && !loginForm.get('password').hasError('required')">
             请输入无空字符的密码
           </mat-error>
-          <mat-error *ngIf="!loginForm.get('password').hasError('required') && !loginForm.get('password').hasError('maxLength')">
+          <mat-error *ngIf="!loginForm.get('password').hasError('required') && !loginForm.get('password').hasError('pattern') && !loginForm.get('password').hasError('maxLength')">
             请输入长度不大于32个字符的密码
           </mat-error>
           <mat-error *ngIf="loginForm.get('password').hasError('required')">

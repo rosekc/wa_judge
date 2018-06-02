@@ -38,19 +38,19 @@ export class ChangePasswordComponent implements OnInit {
       oldPass: new FormControl('', [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       newPass1: new FormControl('', [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       newPass2: new FormControl('', [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ])
     });
   }

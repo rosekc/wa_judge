@@ -33,6 +33,7 @@ export class StudentCreateSingleComponent implements OnInit {
       this.studentService.currentStudentInfo = {
         userName: '',
         name: '',
+        group: '',
         password: ''
       };
     }
@@ -47,18 +48,23 @@ export class StudentCreateSingleComponent implements OnInit {
       userName: new FormControl(this.studentService.currentStudentInfo.userName, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       name: new FormControl(this.studentService.currentStudentInfo.name, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
+      ]),
+      group: new FormControl(this.studentService.currentStudentInfo.group, [
+        Validators.required,
+        Validators.maxLength(32),
+        Validators.pattern(/^\S+$/)
       ]),
       password: new FormControl(this.studentService.currentStudentInfo.password, [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ])
     });
   }

@@ -49,18 +49,18 @@ export class TeacherCreateSingleComponent implements OnInit {
       userName: new FormControl(this.teacherService.currentTeacherInfo.userName, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       name: new FormControl(this.teacherService.currentTeacherInfo.name, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       password: new FormControl(this.teacherService.currentTeacherInfo.password, [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       userType: new FormControl(this.teacherService.currentTeacherInfo.userType.toString(), [
         Validators.required

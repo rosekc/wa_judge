@@ -62,12 +62,12 @@ export class TeacherDetailComponent
       userName: new FormControl(this.teacherInfo.userName, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       name: new FormControl(this.teacherInfo.name, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       userType: new FormControl(this.teacherInfo.userType.toString(), [
         Validators.required

@@ -6,7 +6,7 @@
       <mat-error *ngIf="studentForm.get('userName').hasError('pattern') && !studentForm.get('userName').hasError('required')">
         请输入无空字符的用户名
       </mat-error>
-      <mat-error *ngIf="!studentForm.get('userName').hasError('required') && !studentForm.get('userName').hasError('maxLength')">
+      <mat-error *ngIf="!studentForm.get('userName').hasError('required') && !studentForm.get('userName').hasError('pattern') && !studentForm.get('userName').hasError('maxLength')">
         请输入长度不大于32个字符的用户名
       </mat-error>
       <mat-error *ngIf="studentForm.get('userName').hasError('required')">
@@ -21,7 +21,7 @@
       <mat-error *ngIf="studentForm.get('name').hasError('pattern') && !studentForm.get('name').hasError('required')">
         请输入无空字符的姓名
       </mat-error>
-      <mat-error *ngIf="!studentForm.get('name').hasError('required') && !studentForm.get('name').hasError('maxLength')">
+      <mat-error *ngIf="!studentForm.get('name').hasError('required') && !studentForm.get('name').hasError('pattern') && !studentForm.get('name').hasError('maxLength')">
         请输入长度不大于32个字符的姓名
       </mat-error>
       <mat-error *ngIf="studentForm.get('name').hasError('required')">
@@ -31,12 +31,27 @@
     </mat-form-field>
 
     <mat-form-field class="studentFormControl">
+        <input matInput placeholder="班级" formControlName="group" type="text" [errorStateMatcher]="matcher" [readOnly]="isLoading"
+          required>
+        <mat-error *ngIf="studentForm.get('group').hasError('pattern') && !studentForm.get('group').hasError('required')">
+          请输入无空字符的班级
+        </mat-error>
+        <mat-error *ngIf="!studentForm.get('group').hasError('required') && !studentForm.get('group').hasError('pattern') && !studentForm.get('group').hasError('maxLength')">
+          请输入长度不大于32个字符的班级
+        </mat-error>
+        <mat-error *ngIf="studentForm.get('group').hasError('required')">
+          班级是
+          <strong>必须</strong>的
+        </mat-error>
+      </mat-form-field>
+
+    <mat-form-field class="studentFormControl">
       <input matInput placeholder="初始密码" formControlName="password" type="password" [errorStateMatcher]="matcher" [readOnly]="isLoading"
         required>
       <mat-error *ngIf="studentForm.get('password').hasError('pattern') && !studentForm.get('password').hasError('required')">
         请输入无空字符的初始密码
       </mat-error>
-      <mat-error *ngIf="!studentForm.get('password').hasError('required') && (!studentForm.get('password').hasError('maxLength') || studentForm.get('password').hasError('minLength'))">
+      <mat-error *ngIf="!studentForm.get('password').hasError('required') && !studentForm.get('password').hasError('pattern') && (!studentForm.get('password').hasError('maxLength') || studentForm.get('password').hasError('minLength'))">
           请输入长度为6到32的初始密码
       </mat-error>
       <mat-error *ngIf="studentForm.get('password').hasError('required')">

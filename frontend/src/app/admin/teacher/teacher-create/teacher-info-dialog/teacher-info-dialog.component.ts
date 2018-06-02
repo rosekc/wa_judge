@@ -32,18 +32,18 @@ export class TeacherInfoDialogComponent implements OnInit {
       userName: new FormControl(this.data.userName, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       name: new FormControl(this.data.name, [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       password: new FormControl(this.data.password, [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       userType: new FormControl(this.data.userType.toString(), [
         Validators.required

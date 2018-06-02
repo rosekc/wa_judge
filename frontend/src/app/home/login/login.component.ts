@@ -39,12 +39,12 @@ export class LoginComponent implements OnInit {
       userName: new FormControl('', [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ]),
       password: new FormControl('', [
         Validators.required,
         Validators.maxLength(32),
-        Validators.pattern(/\S+/)
+        Validators.pattern(/^\S+$/)
       ])
     });
   }
