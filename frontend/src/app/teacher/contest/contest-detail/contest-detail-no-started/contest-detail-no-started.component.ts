@@ -49,6 +49,9 @@ export class ContestDetailNoStartedComponent implements OnInit {
       endTime: new FormControl(
         moment(this.contestService.contestInfo.endTime),
         [Validators.required]
+      ),
+      notice: new FormControl(
+        this.contestService.contestInfo.notice
       )
     });
   }

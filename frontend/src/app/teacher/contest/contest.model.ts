@@ -10,5 +10,6 @@ export interface ContestInfo {
   teacherId: number;
   startTime?: number;
   endTime?: number;
+  notice?: string;
   state?: ContestState;
 }
