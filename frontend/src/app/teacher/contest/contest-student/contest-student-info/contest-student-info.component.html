@@ -6,27 +6,27 @@
 
   <table mat-table #table [dataSource]="dataSource" *ngIf="!isLoading" fxFlexFill>
     <ng-container matColumnDef="userName">
-      <th mat-header-cell *matHeaderCellDef> 学号 </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%"> 学号 </th>
+      <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> 姓名 </th>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%"> 姓名 </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
 
     <ng-container matColumnDef="group">
-      <th mat-header-cell *matHeaderCellDef> 班级 </th>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%"> 班级 </th>
       <td mat-cell *matCellDef="let element"> {{element.group}} </td>
     </ng-container>
 
     <ng-container matColumnDef="isLogged">
-      <th mat-header-cell *matHeaderCellDef> 登录情况 </th>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%"> 登录情况 </th>
       <td mat-cell *matCellDef="let element">{{element.isLogged===0?'已登录':'未登录'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="isSubmitted">
-      <th mat-header-cell *matHeaderCellDef> 提交情况 </th>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%"> 提交情况 </th>
       <td mat-cell *matCellDef="let element">{{element.isSubmitted===0?'已提交':'未提交'}}</td>
     </ng-container>
 

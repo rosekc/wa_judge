@@ -60,7 +60,13 @@ export class ContestCreateComponent implements OnInit {
     });
   }
 
-  create() {}
+  create() {
+    this.contestService.contestInfo.name = this.contestForm.get('name').value;
+    this.contestService.contestInfo.startTime = moment(this.contestForm.get('startTime').value).valueOf();
+    this.contestService.contestInfo.endTime = moment(this.contestForm.get('endTime').value).valueOf();
+    this.contestService.contestInfo.notice = this.contestForm.get('notice').value;
+    console.log(this.contestService.contestInfo);
+  }
 
   reset() {
     this.studentCreate.reset();
