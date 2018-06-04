@@ -8,17 +8,19 @@ import { StudentCreateSingleComponent } from './student-create/student-create-si
 import { StudentDetailComponent } from './student-detail/student-detail.component';
 import { StudentInfoDialogComponent } from './student-create/student-info-dialog/student-info-dialog.component';
 import { StudentListComponent } from './student-list/student-list.component';
+import { StudentListDialogComponent } from './student-create/student-list-dialog/student-list-dialog.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
-  entryComponents: [StudentInfoDialogComponent],
+  entryComponents: [StudentInfoDialogComponent, StudentListDialogComponent],
   declarations: [
     StudentCreateComponent,
     StudentCreateMultiComponent,
     StudentCreateSingleComponent,
     StudentDetailComponent,
     StudentInfoDialogComponent,
-    StudentListComponent
+    StudentListComponent,
+    StudentListDialogComponent
   ]
 })
 export class StudentModule {}

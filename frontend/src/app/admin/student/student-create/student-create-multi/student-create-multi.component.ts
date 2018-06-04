@@ -4,9 +4,10 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 
 import { DialogService } from '../../../../shared/dialog/dialog.service';
 import { FileService } from '../../../../shared/file/file.service';
-import { StudentInfo, StudentInfoWithSymbol } from '../../student-info.model';
+import { StudentInfo, StudentInfoWithSymbol } from '../../student.model';
 import { StudentInfoDialogComponent } from '../student-info-dialog/student-info-dialog.component';
 import { StudentService } from '../../student.service';
+import { StudentListDialogComponent } from '../student-list-dialog/student-list-dialog.component';
 
 @Component({
   selector: 'app-student-create-multi',
@@ -59,22 +60,41 @@ export class StudentCreateMultiComponent implements OnInit {
   import(evt: any, fileForm: HTMLFormElement) {
     const header = ['用户名', '姓名', '班级', '初始密码'];
     const propertys = ['userName', 'name', 'group', 'password'];
-    const callback = (data: Array<any>, error: Error) => {
+    this.fileService.readExcelFile<StudentInfoWithSymbol>(
+      evt,
+      { key: 'userName', header: header, propertys: propertys },
+      this.importCallback(fileForm)
+    );
+  }
+
+  importCallback(fileForm: HTMLFormElement) {
+    return (data: Array<StudentInfoWithSymbol>, error: Error) => {
       if (error) {
         this.dialogService.showErrorMessage(error.message);
         fileForm.reset();
       } else {
-        this.dataSource.data = data.map(x => {
-          x['sid'] = Symbol();
-          return x;
-        });
+        const repeatList = this.dataSource.data.filter(x =>
+          data.find(y => y.userName === x.userName)
+        );
+        if (repeatList.length > 0) {
+          this.dialog.open(StudentListDialogComponent, {
+            data: { repeatList: repeatList },
+            minWidth: '430px'
+          });
+        } else {
+          const list = this.dataSource.data.concat(
+            data.map(x => {
+              x['sid'] = Symbol();
+              return x;
+            })
+          );
+          list.sort((a, b) => {
+            return Number(a.userName) - Number(b.userName);
+          });
+          this.dataSource.data = list;
+        }
       }
     };
-    this.fileService.readExcelFile(
-      evt,
-      { header: header, propertys: propertys },
-      callback
-    );
   }
 
   edit(x: StudentInfoWithSymbol, event: MouseEvent) {

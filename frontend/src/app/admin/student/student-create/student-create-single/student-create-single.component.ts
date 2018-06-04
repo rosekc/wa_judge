@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 
 import { DialogService } from '../../../../shared/dialog/dialog.service';
 import { FormErrorStateMatcher } from '../../../../shared/form-error-state-matcher';
-import { StudentInfo } from '../../student-info.model';
+import { StudentInfo } from '../../student.model';
 import { StudentService } from '../../student.service';
 
 @Component({

@@ -8,7 +8,7 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material';
 
 import { FormErrorStateMatcher } from '../../../../shared/form-error-state-matcher';
-import { StudentInfo } from '../../student-info.model';
+import { StudentInfo } from '../../student.model';
 
 @Component({
   selector: 'app-student-info-dialog',

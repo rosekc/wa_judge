@@ -1,6 +1,6 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { ContestInfo } from '../student/contest/contest.model';
-import { StudentInfo } from '../admin/student/student-info.model';
+import { StudentInfo } from '../admin/student/student.model';
 import { SubmissionFile } from '../student/contest/contest-detail/contest-submission/submission.model';
 import { TeacherInfo } from '../admin/teacher/teacher.model';
 import { UserType } from './auth/user.model';

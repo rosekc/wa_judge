@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { catchError, finalize, map, startWith } from 'rxjs/operators';
 
-import { StudentInfo } from '../student-info.model';
+import { StudentInfo } from '../student.model';
 import { StudentService } from '../student.service';
 
 @Component({

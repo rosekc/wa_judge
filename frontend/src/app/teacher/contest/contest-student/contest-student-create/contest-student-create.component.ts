@@ -58,7 +58,7 @@ export class ContestStudentCreateComponent implements OnInit {
         repeatList: this.dataSource.data,
         errorList: this.dataSource.data
       },
-      minWidth: '480px'
+      minWidth: '430px'
     });
   }
 

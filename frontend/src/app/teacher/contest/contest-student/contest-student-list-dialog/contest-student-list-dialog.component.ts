@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 
 import { ContestStudentInfo } from '../contest-student.model';
-import { ContestStudentListDialogData } from 'src/app/teacher/contest/contest-student/contest-student.model';
+import { ContestStudentListDialogData } from '../contest-student.model';
 
 @Component({
   selector: 'app-contest-student-list-dialog',

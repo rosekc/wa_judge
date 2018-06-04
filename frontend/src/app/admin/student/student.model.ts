@@ -13,3 +13,7 @@ export interface StudentInfoWithSymbol {
   password?: string;
   sid: symbol;
 }
+
+export interface StudentListDialogData {
+  repeatList: Array<StudentInfoWithSymbol>;
+}

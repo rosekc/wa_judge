@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, map, startWith, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { StudentInfo } from './student-info.model';
+import { StudentInfo } from './student.model';
 
 @Injectable({
   providedIn: 'root'
