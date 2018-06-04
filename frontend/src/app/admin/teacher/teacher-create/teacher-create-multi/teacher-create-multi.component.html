@@ -1,7 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="25px">
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px">
-    <button mat-raised-button color="primary" (click)="create()" *ngIf="isImported()">创建</button>
-    <button mat-raised-button color="primary" (click)="import()" *ngIf="!isImported()">导入</button>
+    <form #fileForm>
+      <button mat-raised-button color="primary" (click)="importInput.click()">
+        导入
+        <input hidden #importInput type="file" (change)="import($event, fileForm)" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+      </button>
+    </form>
     <button mat-raised-button color="warn" (click)="delete()" [disabled]="!isSelected()" *ngIf="isImported()">删除</button>
   </div>
 
@@ -52,3 +56,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
     </table>
   </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0px">
+    <button mat-raised-button color="accent" (click)="create()" *ngIf="isImported()">创建</button>
+  </div>
+</div>

@@ -3,9 +3,12 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 
 import { DialogService } from '../../../../shared/dialog/dialog.service';
+import { FileService } from '../../../../shared/file/file.service';
 import { TeacherInfo, TeacherInfoWithSymbol } from '../../teacher.model';
 import { TeacherInfoDialogComponent } from '../teacher-info-dialog/teacher-info-dialog.component';
+import { TeacherListDialogComponent } from '../teacher-list-dialog/teacher-list-dialog.component';
 import { TeacherService } from '../../teacher.service';
+import { UserType } from '../../../../core/auth/user.model';
 
 @Component({
   selector: 'app-teacher-create-multi',
@@ -20,6 +23,8 @@ export class TeacherCreateMultiComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private dialogService: DialogService,
+    private fileService: FileService,
     private teacherService: TeacherService
   ) {}
 
@@ -53,16 +58,49 @@ export class TeacherCreateMultiComponent implements OnInit {
     );
   }
 
-  import() {
-    const a = this.dataSource.data;
-    a.push({
-      userName: 'new',
-      name: 'newS',
-      password: '123456',
-      userType: 1,
-      sid: Symbol()
-    });
-    this.dataSource.data = a;
+  import(evt: any, fileForm: HTMLFormElement) {
+    const header = ['用户名', '姓名', '初始密码', '用户类型'];
+    const propertys = ['userName', 'name', 'password', 'userType'];
+    this.fileService.readExcelFile<TeacherInfoWithSymbol>(
+      evt,
+      { key: 'userName', header: header, propertys: propertys },
+      this.importCallback(fileForm)
+    );
+  }
+
+  importCallback(fileForm: HTMLFormElement) {
+    return (data: Array<TeacherInfoWithSymbol>, error: Error) => {
+      if (error) {
+        this.dialogService.showErrorMessage(error.message);
+        fileForm.reset();
+      } else {
+        const repeatList = this.dataSource.data.filter(x =>
+          data.find(y => y.userName === x.userName)
+        );
+        if (repeatList.length > 0) {
+          this.dialog.open(TeacherListDialogComponent, {
+            data: { repeatList: repeatList },
+            minWidth: '430px'
+          });
+        } else {
+          const list = this.dataSource.data.concat(
+            data.map(x => {
+              if (x['userType'].toString() === '0' || x['userType'].toString() === '管理员') {
+                x['userType'] = UserType.admin;
+              } else {
+                x['userType'] = UserType.teacher;
+              }
+              x['sid'] = Symbol();
+              return x;
+            })
+          );
+          list.sort((a, b) => {
+            return Number(a.userName) - Number(b.userName);
+          });
+          this.dataSource.data = list;
+        }
+      }
+    };
   }
 
   edit(x: TeacherInfoWithSymbol, event: MouseEvent) {

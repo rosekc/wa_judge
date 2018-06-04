@@ -15,3 +15,7 @@ export interface TeacherInfoWithSymbol {
   password?: string;
   sid: symbol;
 }
+
+export interface TeacherListDialogData {
+  repeatList: Array<TeacherInfoWithSymbol>;
+}

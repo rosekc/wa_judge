@@ -8,19 +8,21 @@ import { TeacherCreateSingleComponent } from './teacher-create/teacher-create-si
 import { TeacherDetailComponent } from './teacher-detail/teacher-detail.component';
 import { TeacherInfoDialogComponent } from './teacher-create/teacher-info-dialog/teacher-info-dialog.component';
 import { TeacherListComponent } from './teacher-list/teacher-list.component';
+import { TeacherListDialogComponent } from './teacher-create/teacher-list-dialog/teacher-list-dialog.component';
 import { TeacherService } from './teacher.service';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
   providers: [TeacherService],
-  entryComponents: [TeacherInfoDialogComponent],
+  entryComponents: [TeacherInfoDialogComponent, TeacherListDialogComponent],
   declarations: [
     TeacherCreateComponent,
     TeacherCreateMultiComponent,
     TeacherCreateSingleComponent,
     TeacherDetailComponent,
     TeacherInfoDialogComponent,
-    TeacherListComponent
+    TeacherListComponent,
+    TeacherListDialogComponent
   ]
 })
 export class TeacherModule {}
