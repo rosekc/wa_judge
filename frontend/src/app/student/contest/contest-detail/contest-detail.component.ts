@@ -16,6 +16,7 @@ export class ContestDetailComponent
   isLoading = true;
   totalTime: number;
   restTime: number;
+  downloadUrl = 'https://download.microsoft.com/download/8/8/5/88544F33-836A-49A5-8B67-451C24709A8F/dotnet-sdk-2.1.300-win-x64.zip';
 
   private timer;
   private url = '/student/contest';

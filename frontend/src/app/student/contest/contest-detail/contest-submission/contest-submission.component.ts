@@ -38,7 +38,7 @@ export class ContestSubmissionComponent implements OnInit, AfterViewInit {
     return this.dataSource.data.length > 0;
   }
 
-  upload() {}
+  upload(evt: any, fileForm: HTMLFormElement) {}
 
   reUpload(x: SubmissionFile) {}
 }
