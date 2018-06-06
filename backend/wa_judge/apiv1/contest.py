@@ -29,10 +29,10 @@ class ContestSchema(ma.ModelSchema):
 
 
 class ContestApi(Resource):
+    method_decorators = [auth.login_required]
     contest_schema = ContestSchema()
     can_modify = ('start_time', 'length', 'permission', 'name')
 
-    @check_authentication(auth)
     @get_args('contest_id', 'page', required=False)
     def get(self, contest_id=None, page=None):
         if contest_id is None:
@@ -52,14 +52,13 @@ class ContestApi(Resource):
         if contest is None:
             return not_found('contest not found.')
         data = self.contest_schema.dump(contest).data
-        if not g.authenticated or g.current_user.id != contest.owner_user_id\
+        if g.current_user.id != contest.owner_user_id\
                 or not contest.is_started():
             del data['submissions']
-        if (g.authenticated and g.current_user.id == contest.owner_user_id) or contest.is_started():
+        if g.current_user.id == contest.owner_user_id or contest.is_started():
             data['have_problem_set'] = contest.problem_set_filename is not None
         return data
 
-    @check_authentication(auth, login_required=True)
     def post(self):
         # json_data = request.get_json()
         try:
@@ -74,7 +73,6 @@ class ContestApi(Resource):
         db.session.commit()
         return self.contest_schema.dump(data).data
 
-    @check_authentication(auth, login_required=True)
     @get_args('contest_id')
     def put(self, contest_id):
         contest = Contest.query.filter_by(id=contest_id).first()
@@ -102,7 +100,8 @@ class ContestApi(Resource):
 
 
 class ContestProblemSetApi(Resource):
-    @check_authentication(auth, login_required=True)
+    method_decorators = [auth.login_required]
+
     @get_args('contest_id')
     def get(self, contest_id):
         contest = Contest.query.filter_by(id=contest_id).first()
@@ -112,7 +111,6 @@ class ContestProblemSetApi(Resource):
             return forbidden('contest have not started.')
         return problem_sets.send_file(contest.problem_set_filename, as_attachment=True)
 
-    @check_authentication(auth, login_required=True)
     @get_args('contest_id')
     def put(self, contest_id):
         contest = Contest.query.filter_by(id=contest_id).first()
@@ -123,7 +121,6 @@ class ContestProblemSetApi(Resource):
         return get_and_save_file(request.files['problem_set'], contest.name,
                                  contest, 'problem_set_filename', problem_sets)
 
-    @check_authentication(auth, login_required=True)
     @get_args('contest_id')
     def delete(self, contest_id):
         contest = Contest.query.filter_by(id=contest_id).first()
@@ -148,6 +145,7 @@ class SubmissionSchema(ma.ModelSchema):
 
 
 class SubmissionApi(Resource):
+    method_decorators = [auth.login_required]
     submission_schema = SubmissionSchema()
 
     @get_args('submission_id', 'page', required=False)
@@ -186,7 +184,8 @@ class SubmissionApi(Resource):
 
 
 class SubmissionFileApi(Resource):
-    @check_authentication(auth, login_required=True)
+    method_decorators = [auth.login_required]
+
     @get_args('submission_id', required=True)
     def get(self, submission_id):
         submission = Submission.query.filter_by(id=submission_id).first()
@@ -196,7 +195,6 @@ class SubmissionFileApi(Resource):
             return unauthorized('not owner of this submission')
         return submission_files.send_file(submission.uploaded_filename, as_attachment=True)
 
-    @check_authentication(auth, login_required=True)
     @get_args('submission_id', required=True)
     def put(self, submission_id):
         submission = Submission.query.filter_by(id=submission_id).first()

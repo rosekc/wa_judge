@@ -1,16 +1,20 @@
 import unittest
-from base64 import b64encode
 
 from wa_judge import create_app, db
 from wa_judge.models import User
 
 
-def auth_headers(username='wawawa', password='wawawa'):
+def auth_json(username='wawawa', password='wawawa'):
     return {
-        'Authorization': 'Basic ' + b64encode(
-            (username + ':' + password).encode('utf-8')).decode('utf-8'),
+        'username': username,
+        'password': password
+    }
+
+
+def auth_headers(token):
+    return {
+        'Authorization': 'Bearer ' + token,
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
     }
 
 
@@ -21,8 +25,10 @@ class AuthTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        db.session.add(User(username='wawawa', password='wawawa'))
+        u = User(username='wawawa', password='wawawa')
+        db.session.add(u)
         db.session.commit()
+        self.token = u.generate_auth_token(3600)
 
     def tearDown(self):
         db.session.remove()
@@ -31,66 +37,50 @@ class AuthTestCase(unittest.TestCase):
 
     def test_auth(self):
         with self.app.test_client() as c:
-            res = c.get('/apiv1/token')
-            self.assertEqual(res.status_code, 401)
-
-            res = c.get('/apiv1/token', headers=auth_headers())
+            res = c.post('/apiv1/token', json=auth_json())
             json_data = res.get_json()
             self.assertIsNotNone(json_data)
             token = json_data['token']
             self.assertIsNotNone(token)
 
-            res = c.get('/apiv1/token', headers=auth_headers(token, ''))
-            self.assertEqual(res.status_code, 200)
-
-    def test_user(self):
-        with self.app.test_client() as c:
-            res = c.get('/apiv1/users/')
+            res = c.post('/apiv1/token', headers=auth_headers(token))
             self.assertEqual(res.status_code, 422)
 
-            res = c.get('/apiv1/users/1')
+            res = c.get('/apiv1/users/1', headers=auth_headers(token))
             json_data = res.get_json()
             self.assertEqual(json_data.get('username'), 'wawawa')
 
-            res = c.get('/apiv1/users/114514')
-            json_data = res.get_json()
+    def test_user(self):
+        with self.app.test_client() as c:
+            res = c.get('/apiv1/users/114514', headers=auth_headers(self.token))
             self.assertEqual(res.status_code, 404)
 
     def test_create_user(self):
         with self.app.test_client() as c:
-            res = c.get('/apiv1/users/1')
-            json_data = res.get_json()
-            self.assertEqual(json_data.get('username'), 'wawawa')
-
-            res = c.get('/apiv1/users/2')
-            json_data = res.get_json()
-            self.assertEqual(res.status_code, 404)
-
             res = c.post('/apiv1/users/',
                          json={'username': 'wawa', 'password': 'wawa'})
             json_data = res.get_json()
             self.assertEqual(json_data.get('username'), 'wawa')
 
-            res = c.get('/apiv1/token', headers=auth_headers('wawa', 'wawa'))
+            res = c.post('/apiv1/token', json=auth_json('wawa', 'wawa'))
+            json_data = res.get_json()
+            self.assertIsNotNone(json_data)
+            token2 = json_data['token']
             self.assertEqual(res.status_code, 200)
 
-            res = c.get('/apiv1/users/2')
+            res = c.get('/apiv1/users/2', headers=auth_headers(token2))
             json_data = res.get_json()
             self.assertEqual(res.status_code, 200)
             self.assertEqual(json_data.get('username'), 'wawa')
 
-    def test_anonymous_login(self):
-        # TODO: 因为目前没有用到这种匿名登陆有区别的api，待有的时候补充
-        pass
-
     def test_update_user(self):
         with self.app.test_client() as c:
-            res = c.put('/apiv1/users/', headers=auth_headers(),
+            res = c.put('/apiv1/users/', headers=auth_headers(self.token),
                         json={'password': 'wawa'})
             json_data = res.get_json()
             self.assertEqual(json_data.get('username'), 'wawawa')
 
-            res = c.get('/apiv1/token', headers=auth_headers())
+            res = c.post('/apiv1/token', json=auth_json())
             self.assertEqual(res.status_code, 401)
-            res = c.get('/apiv1/token', headers=auth_headers('wawawa', 'wawa'))
+            res = c.post('/apiv1/token', json=auth_json('wawawa', 'wawa'))
             self.assertEqual(res.status_code, 200)
