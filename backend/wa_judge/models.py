@@ -8,12 +8,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import db
 
 
+class UserRole(enum.Enum):
+    ADMIN = 'ADMIN'
+    MANAGER = 'MANAGER'
+    USER = 'USER'
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    role = db.Column(db.Enum(UserRole), nullable=False, default=UserRole.USER)
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     submissions = db.relationship('Submission', back_populates='author')
