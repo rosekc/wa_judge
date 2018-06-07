@@ -8,7 +8,7 @@ from .. import db, ma
 from ..models import User
 from ..utils.decorators import get_args
 from ..utils.errors import (conflict, not_found, unauthorized,
-                            unprocessable_entity)
+                            bad_request)
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
@@ -48,7 +48,7 @@ class TokenApi(Resource):
             username = json_data['username']
             password = json_data['password']
         except (AttributeError, TypeError):
-            return unprocessable_entity('miss some field')
+            return bad_request('miss some field')
         user = User.query.filter_by(username=username).first()
         if user and user.verify_password(password):
             return {'token': user.generate_auth_token(3600)}
@@ -81,7 +81,7 @@ class UserApi(Resource):
         try:
             data = self.user_schema.load(json_data).data
         except (ValidationError, AttributeError) as err:
-            return unprocessable_entity(err.messages)
+            return bad_request(err.messages)
         user = User.query.filter(or_(User.username == data.username,
                                      and_(User.email.isnot(None), User.email == data.email))).first()
         if user:
@@ -94,11 +94,11 @@ class UserApi(Resource):
     def put(self):
         json_data = request.get_json()
         if not json_data:
-            return unprocessable_entity('data not found in request.')
+            return bad_request('data not found in request.')
         user = g.current_user
         for key, value in json_data.items():
             if key not in self.can_modify:
-                return unprocessable_entity('key "%s" not existed or can not modify.' % key)
+                return bad_request('key "%s" not existed or can not modify.' % key)
             setattr(user, key, value)
         db.session.add(user)
         db.session.commit()

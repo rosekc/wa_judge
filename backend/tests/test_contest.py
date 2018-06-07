@@ -1,7 +1,6 @@
 import io
 import time
 import unittest
-from base64 import b64encode
 from datetime import datetime, timedelta
 
 from wa_judge import create_app, db
@@ -70,7 +69,7 @@ class ContestTestCase(unittest.TestCase):
             }
             res = c.post('/apiv1/contests/',
                          headers=auth_headers(self.token1), json=datas)
-            self.assertEqual(res.status_code, 422)
+            self.assertEqual(res.status_code, 400)
             datas = {
                 'name': 'WA Judge Contest Round 3',
                 'start_time': '2018-05-17T16:45:41.237169+00:00',
@@ -85,7 +84,7 @@ class ContestTestCase(unittest.TestCase):
     def test_put_contest(self):
         with self.app.test_client() as c:
             res = c.put('/apiv1/contests/', headers=auth_headers(self.token1))
-            self.assertEqual(res.status_code, 422)
+            self.assertEqual(res.status_code, 400)
 
             res = c.put('/apiv1/contests/1', headers=auth_headers(self.token2),
                         json={'name': 'WA Judge Contest Round 114'})

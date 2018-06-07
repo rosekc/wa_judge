@@ -8,9 +8,9 @@ from werkzeug.exceptions import BadRequestKeyError
 
 from .. import db, ma
 from ..models import Contest, Submission
-from ..utils.decorators import check_authentication, get_args
+from ..utils.decorators import get_args
 from ..utils.errors import (forbidden, not_found, unauthorized,
-                            unprocessable_entity)
+                            bad_request)
 from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
 from .auth import auth
 
@@ -64,10 +64,10 @@ class ContestApi(Resource):
         try:
             json_data = request.get_json()
             if json_data is None:
-                return unprocessable_entity('empty input')
+                return bad_request('empty input')
             data = self.contest_schema.load(json_data).data
         except (ValidationError, AttributeError) as err:
-            return unprocessable_entity(getattr(err, 'messages', 'AttributeError'))
+            return bad_request(getattr(err, 'messages', 'AttributeError'))
         data.owner_user_id = g.current_user.id
         db.session.add(data)
         db.session.commit()
@@ -82,16 +82,16 @@ class ContestApi(Resource):
             return unauthorized('not owner of this contest')
         json_data = request.get_json()
         if json_data is None:
-            return unprocessable_entity('empty input')
+            return bad_request('empty input')
         contest_json = self.contest_schema.dump(contest).data
         for key, value in json_data.items():
             if key not in self.can_modify:
-                return unprocessable_entity('key "%s" not existed or can not modify.' % key)
+                return bad_request('key "%s" not existed or can not modify.' % key)
             contest_json[key] = value
         try:
             contest = self.contest_schema.load(contest_json).data
         except (ValidationError, AttributeError) as err:
-            return unprocessable_entity(getattr(err, 'messages', 'AttributeError'))
+            return bad_request(getattr(err, 'messages', 'AttributeError'))
         db.session.add(contest)
         db.session.commit()
         data = self.contest_schema.dump(contest).data
@@ -173,10 +173,10 @@ class SubmissionApi(Resource):
         try:
             json_data = request.get_json()
             if json_data is None:
-                return unprocessable_entity('empty input')
+                return bad_request('empty input')
             data = self.submission_schema.load(json_data).data
         except (ValidationError, AttributeError) as err:
-            return unprocessable_entity(getattr(err, 'messages', 'AttributeError'))
+            return bad_request(getattr(err, 'messages', 'AttributeError'))
         data.author = g.current_user
         db.session.add(data)
         db.session.commit()
@@ -205,4 +205,4 @@ class SubmissionFileApi(Resource):
             return get_and_save_file(request.files['submission_file'], '_'.join([str(submission.id), str(submission.author.id)]),
                                      submission, 'uploaded_filename', submission_files)
         except BadRequestKeyError:
-            return unprocessable_entity('key error')
+            return bad_request('key error')

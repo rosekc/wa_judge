@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import g, request
 
-from .errors import unprocessable_entity
+from .errors import bad_request
 
 
 def get_args(*need_args, required=True):
@@ -14,7 +14,7 @@ def get_args(*need_args, required=True):
                 if val:
                     kwargs[arg] = val
                 if required and kwargs.get(arg) is None:
-                    return unprocessable_entity('key %s is required.' % arg)
+                    return bad_request('key %s is required.' % arg)
             return f(*args, **kwargs)
         return wrapper
     return decorator

@@ -1,4 +1,3 @@
-import os
 import random
 from datetime import datetime
 
@@ -9,7 +8,7 @@ from marshmallow_sqlalchemy import ModelConverter
 from sqlalchemy import Enum
 
 from .. import db
-from .errors import unprocessable_entity
+from .errors import bad_request
 
 
 def gen_random_str(length=50):
@@ -37,13 +36,13 @@ def get_and_save_file(file, filename, row, filename_field_name, upload_set):
         upload_set {UploadSet} -- [flask-uploads中的UploadSet]
     """
     if file is None:
-        return unprocessable_entity('file is required.')
+        return bad_request('file is required.')
     try:
         filename = get_formatted_filename(filename, file.filename)
         filename = upload_set.save(
             file, name=filename)
     except UploadNotAllowed:
-        return unprocessable_entity('this type of file is not allow')
+        return bad_request('this type of file is not allow')
     # old_filename = getattr(row, filename_field_name)
     # if old_filename:
     #     path = upload_set.path(old_filename)

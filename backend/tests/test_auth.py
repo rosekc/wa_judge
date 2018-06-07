@@ -44,7 +44,7 @@ class AuthTestCase(unittest.TestCase):
             self.assertIsNotNone(token)
 
             res = c.post('/apiv1/token', headers=auth_headers(token))
-            self.assertEqual(res.status_code, 422)
+            self.assertEqual(res.status_code, 400)
 
             res = c.get('/apiv1/users/1', headers=auth_headers(token))
             json_data = res.get_json()
