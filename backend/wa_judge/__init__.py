@@ -81,3 +81,21 @@ def test():
 @app.cli.command()
 def init_db():
     db.create_all()
+
+
+@app.cli.command()
+def gen_test_db():
+    from .models import User, Contest, ContestPermission
+    from datetime import datetime, timedelta
+    db.create_all()
+    u1 = User(username='wawawa', password='wawawa')
+    u2 = User(username='wawa', password='wawa')
+    db.session.add(u1)
+    db.session.add(u2)
+    db.session.add(Contest(name='WA Judge Contest Round 1',
+                           start_time=datetime.utcnow(), owner_user=u1,
+                           permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
+    db.session.add(Contest(name='WA Judge Contest Round 2',
+                           start_time=datetime.utcnow(), owner_user=u2,
+                           permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
+    db.session.commit()
