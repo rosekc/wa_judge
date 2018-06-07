@@ -79,16 +79,28 @@ class UserApi(Resource):
     def post(self):
         json_data = request.get_json()
         try:
-            data = self.user_schema.load(json_data).data
+            if isinstance(json_data, dict):
+                users = [self.user_schema.load(json_data).data]
+            else:
+                users = self.user_schema.load(json_data, many=True).data
         except (ValidationError, AttributeError) as err:
             return bad_request(err.messages)
-        user = User.query.filter(or_(User.username == data.username,
-                                     and_(User.email.isnot(None), User.email == data.email))).first()
-        if user:
-            return conflict('User have been created')
-        db.session.add(data)
+        errors = []
+        data = []
+        for u in users:
+            user = User.query.filter(or_(User.username == u.username,
+                                         and_(User.email.isnot(None), User.email == u.email))).first()
+            if user:
+                errors.append('User %s have been created' % u.username)
+                continue
+            db.session.add(u)
+            data.append(u)
         db.session.commit()
-        return self.user_schema.dump(data)
+        if len(errors) == 0:
+            status_code = 200
+        else:
+            status_code = 409
+        return {'errors': errors, 'data': self.user_schema.dump(data, many=True).data}, status_code
 
     @auth.login_required
     def put(self):

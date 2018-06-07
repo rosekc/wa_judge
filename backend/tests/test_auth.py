@@ -52,7 +52,8 @@ class AuthTestCase(unittest.TestCase):
 
     def test_user(self):
         with self.app.test_client() as c:
-            res = c.get('/apiv1/users/114514', headers=auth_headers(self.token))
+            res = c.get('/apiv1/users/114514',
+                        headers=auth_headers(self.token))
             self.assertEqual(res.status_code, 404)
 
     def test_create_user(self):
@@ -60,7 +61,7 @@ class AuthTestCase(unittest.TestCase):
             res = c.post('/apiv1/users/',
                          json={'username': 'wawa', 'password': 'wawa'})
             json_data = res.get_json()
-            self.assertEqual(json_data.get('username'), 'wawa')
+            self.assertEqual(json_data['data'][0]['username'], 'wawa')
 
             res = c.post('/apiv1/token', json=auth_json('wawa', 'wawa'))
             json_data = res.get_json()
@@ -72,6 +73,16 @@ class AuthTestCase(unittest.TestCase):
             json_data = res.get_json()
             self.assertEqual(res.status_code, 200)
             self.assertEqual(json_data.get('username'), 'wawa')
+
+    def test_create_many_users(self):
+        with self.app.test_client() as c:
+            res = c.post('/apiv1/users/',
+                         json=[{'username': 'wawa1', 'password': 'wawa'}, {'username': 'wawawa', 'password': 'wawa'}])
+            json_data = res.get_json()
+            self.assertEqual(len(json_data['errors']), 1)
+            self.assertEqual(json_data['errors'][0], 'User wawawa have been created')
+            self.assertEqual(json_data['data'][0]['username'], 'wawa1')
+
 
     def test_update_user(self):
         with self.app.test_client() as c:
