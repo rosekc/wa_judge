@@ -169,7 +169,6 @@ class SubmissionApi(Resource):
         json_data = self.submission_schema.dump(submission)
         return json_data
 
-    @check_authentication(auth, login_required=True)
     def post(self):
         try:
             json_data = request.get_json()

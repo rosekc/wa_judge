@@ -31,10 +31,11 @@ class ContestTestCase(unittest.TestCase):
         db.create_all()
         u1 = User(username='wawawa', password='wawawa')
         u2 = User(username='wawa', password='wawa')
-        self.token1 = u1.generate_auth_token(3600)
-        self.token2 = u2.generate_auth_token(3600)
         db.session.add(u1)
         db.session.add(u2)
+        db.session.commit()
+        self.token1 = u1.generate_auth_token(3600)
+        self.token2 = u2.generate_auth_token(3600)
         db.session.add(Contest(name='WA Judge Contest Round 1',
                                start_time=datetime.utcnow(), owner_user=u1,
                                permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
@@ -148,7 +149,7 @@ class ContestTestCase(unittest.TestCase):
             self.assertEqual(res.status_code, 401)
 
             res = c.delete('/apiv1/contests/1/problem_set',
-                           headers=auth_headers(self.token2))
+                           headers=auth_headers(self.token1))
             self.assertEqual(res.status_code, 200)
 
     def test_submission(self):
@@ -167,7 +168,7 @@ class ContestTestCase(unittest.TestCase):
                          headers=auth_headers(self.token1), json=datas)
             self.assertEqual(res.status_code, 200)
 
-            res = c.get('/apiv1/submissions/1')
+            res = c.get('/apiv1/submissions/1', headers=auth_headers(self.token1))
             self.assertEqual(res.status_code, 200)
 
             res = c.get('/apiv1/submissions/1/submission_file',
