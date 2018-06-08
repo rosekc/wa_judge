@@ -6,5 +6,6 @@ Api 参考
    :caption: 目录
    :maxdepth: 1
 
+   errors
    auth/index
    contest/index

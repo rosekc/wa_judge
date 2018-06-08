@@ -22,6 +22,9 @@
 project = 'wa_judge'
 copyright = '2018, rosekc'
 author = 'rosekc'
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../'))
 
 # The short X.Y version
 version = ''

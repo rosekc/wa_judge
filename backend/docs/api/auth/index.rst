@@ -1,7 +1,7 @@
 Auth Api
 =============
 
-`wa_judge` 的用户验证目前为http basic auth。
+`wa_judge` 的用户验证目前为http bearer auth。目前除了get_token以外的api，均需要带上token。
 
 .. toctree::
     :caption: 目录

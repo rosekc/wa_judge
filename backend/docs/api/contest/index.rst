@@ -3,6 +3,7 @@ Contest Api
 
 .. toctree::
     :caption: 目录
+    :maxdepth: 1
 
     dict
     create_contest
