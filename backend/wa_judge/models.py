@@ -1,5 +1,5 @@
 import enum
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -93,6 +93,17 @@ class Contest(db.Model):
     owner_user = db.relationship('User', back_populates='own_contests')
     problem_set_filename = db.Column(db.String(64))
     submissions = db.relationship('Submission', back_populates='contest')
+
+    @property
+    def end_time(self):
+        return self.start_time + self.length
+    
+    @end_time.setter
+    def end_time(self, value):
+        length = value - self.start_time
+        if length < timedelta(0):
+            raise ValueError('end_time must greater than start_time')
+        self.length = length
 
     def is_running(self):
         current_time = datetime.utcnow()
