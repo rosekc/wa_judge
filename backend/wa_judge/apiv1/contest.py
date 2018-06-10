@@ -7,8 +7,8 @@ from marshmallow import ValidationError
 from werkzeug.exceptions import BadRequestKeyError
 
 from .. import db, ma
-from ..models import Contest, Submission
-from ..utils.decorators import get_args
+from ..models import Contest, Submission, UserRole
+from ..utils.decorators import get_args, need_roles
 from ..utils.errors import (forbidden, not_found, unauthorized,
                             bad_request)
 from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
@@ -59,6 +59,7 @@ class ContestApi(Resource):
             data['have_problem_set'] = contest.problem_set_filename is not None
         return data
 
+    @need_roles(UserRole.ADMIN, UserRole.MANAGER)
     def post(self):
         # json_data = request.get_json()
         try:
@@ -73,12 +74,13 @@ class ContestApi(Resource):
         db.session.commit()
         return self.contest_schema.dump(data).data
 
+    @need_roles(UserRole.ADMIN, UserRole.MANAGER)
     @get_args('contest_id')
     def put(self, contest_id):
         contest = Contest.query.filter_by(id=contest_id).first()
         if contest is None:
             return not_found('contest not found.')
-        if contest.owner_user_id != g.current_user.id:
+        if contest.owner_user_id != g.current_user.id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')
         json_data = request.get_json()
         if json_data is None:
@@ -116,7 +118,7 @@ class ContestProblemSetApi(Resource):
         contest = Contest.query.filter_by(id=contest_id).first()
         if contest is None:
             return not_found()
-        if g.current_user.id != contest.owner_user_id:
+        if g.current_user.id != contest.owner_user_id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')
         return get_and_save_file(request.files['problem_set'], contest.name,
                                  contest, 'problem_set_filename', problem_sets)
@@ -126,7 +128,7 @@ class ContestProblemSetApi(Resource):
         contest = Contest.query.filter_by(id=contest_id).first()
         if contest is None or contest.problem_set_filename is None:
             return not_found()
-        if g.current_user.id != contest.owner_user_id:
+        if g.current_user.id != contest.owner_user_id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')
         path = problem_sets.path(contest.problem_set_filename)
         if path and os.path.exists(path):

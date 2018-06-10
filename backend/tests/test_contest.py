@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime, timedelta
 
 from wa_judge import create_app, db
-from wa_judge.models import Contest, ContestPermission, User
+from wa_judge.models import Contest, ContestPermission, User, UserRole
 
 
 def auth_json(username='wawawa', password='wawawa'):
@@ -28,13 +28,16 @@ class ContestTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        u1 = User(username='wawawa', password='wawawa')
-        u2 = User(username='wawa', password='wawa')
+        u1 = User(username='wawawa', password='wawawa', role=UserRole.ADMIN)
+        u2 = User(username='wawa', password='wawa', role=UserRole.MANAGER)
+        u3 = User(username='abababa', password='ababa')
         db.session.add(u1)
         db.session.add(u2)
+        db.session.add(u3)
         db.session.commit()
         self.token1 = u1.generate_auth_token(3600)
         self.token2 = u2.generate_auth_token(3600)
+        self.token3 = u3.generate_auth_token(3600)
         db.session.add(Contest(name='WA Judge Contest Round 1',
                                start_time=datetime.utcnow(), owner_user=u1,
                                permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
@@ -76,6 +79,10 @@ class ContestTestCase(unittest.TestCase):
                 'permission': 'PRIVATE', 'length': '3600'
             }
             res = c.post('/apiv1/contests/',
+                         headers=auth_headers(self.token3), json=datas)
+            self.assertEqual(res.status_code, 401)
+
+            res = c.post('/apiv1/contests/',
                          headers=auth_headers(self.token1), json=datas)
             self.assertEqual(res.status_code, 200)
             json_data = res.get_json()
@@ -90,11 +97,21 @@ class ContestTestCase(unittest.TestCase):
                         json={'name': 'WA Judge Contest Round 114'})
             self.assertEqual(res.status_code, 401)
 
+            res = c.put('/apiv1/contests/2', headers=auth_headers(self.token2),
+                        json={'name': 'WA Judge Contest Round 114'})
+            self.assertEqual(res.status_code, 200)
+
             res = c.put('/apiv1/contests/1', headers=auth_headers(self.token1),
                         json={'name': 'WA Judge Contest Round 114'})
             self.assertEqual(res.status_code, 200)
             json_data = res.get_json()
             self.assertEqual(json_data['name'], 'WA Judge Contest Round 114')
+
+            res = c.put('/apiv1/contests/2', headers=auth_headers(self.token1),
+                        json={'name': 'WA Judge Contest Round 514'})
+            self.assertEqual(res.status_code, 200)
+            json_data = res.get_json()
+            self.assertEqual(json_data['name'], 'WA Judge Contest Round 514')
 
     def test_problem_set(self):
         with self.app.test_client() as c:

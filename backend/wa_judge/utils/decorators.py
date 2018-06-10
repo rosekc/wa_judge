@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import g, request
 
-from .errors import bad_request
+from .errors import bad_request, unauthorized
 
 
 def get_args(*need_args, required=True):
@@ -35,6 +35,18 @@ def check_authentication(auth, login_required=False):
         def wrapper(*args, **kwargs):
             if login_required and not g.authenticated:
                 return auth.auth_error_callback()
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
+
+def need_roles(*roles):
+    """检查用户角色，若不在列表里返回401
+    """
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            if g.current_user.role not in roles:
+                return unauthorized('permission deny. try other account.')
             return f(*args, **kwargs)
         return wrapper
     return decorator
