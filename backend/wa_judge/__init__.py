@@ -36,9 +36,11 @@ def create_app(config_name='development', test_config=None):
 
     from .apiv1.auth import TokenApi, UserApi
     api.add_resource(TokenApi, '/token')
-    api.add_resource(UserApi,  '/users/', '/users/<int:user_id>')
-    from .apiv1.contest import ContestApi, ContestProblemSetApi, SubmissionApi, SubmissionFileApi
-    api.add_resource(ContestApi,  '/contests/', '/contests/<int:contest_id>')
+    api.add_resource(UserApi, '/users/', '/users/<int:user_id>')
+    from .apiv1.contest import ContestApi, ContestProblemSetApi, SubmissionApi, SubmissionFileApi, ContestantApi
+    api.add_resource(ContestApi, '/contests/', '/contests/<int:contest_id>')
+    api.add_resource(ContestantApi,
+                     '/contests/<int:contest_id>/contestants/')
     api.add_resource(ContestProblemSetApi,
                      '/contests/<int:contest_id>/problem_set')
     api.add_resource(SubmissionApi, '/submissions/',

@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from sqlalchemy.ext.associationproxy import association_proxy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
@@ -12,6 +13,18 @@ class UserRole(enum.Enum):
     ADMIN = 'ADMIN'
     MANAGER = 'MANAGER'
     USER = 'USER'
+
+
+class UserContest(db.Model):
+    __name__ = 'user_contest'
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id'), primary_key=True)
+    contest_id = db.Column(db.Integer, db.ForeignKey(
+        'contests.id'), primary_key=True)
+    user = db.relationship('User', back_populates='user_contests')
+    contest = db.relationship('Contest', back_populates='contest_users')
+    last_ip = db.Column(db.String(64))
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -24,6 +37,10 @@ class User(db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     submissions = db.relationship('Submission', back_populates='author')
     own_contests = db.relationship('Contest', back_populates='owner_user')
+    user_contests = db.relationship(
+        'UserContest', back_populates='user', order_by=UserContest.contest_id, cascade='all, delete-orphan')
+    contests = association_proxy(
+        'user_contests', 'contest', creator=lambda x: UserContest(contest=x))
 
     @property
     def password(self):
@@ -93,11 +110,15 @@ class Contest(db.Model):
     owner_user = db.relationship('User', back_populates='own_contests')
     problem_set_filename = db.Column(db.String(64))
     submissions = db.relationship('Submission', back_populates='contest')
+    contestants = association_proxy(
+        'contest_users', 'user', creator=lambda x: UserContest(user=x))
+    contest_users = db.relationship(
+        'UserContest', back_populates='contest', cascade='all, delete-orphan')
 
     @property
     def end_time(self):
         return self.start_time + self.length
-    
+
     @end_time.setter
     def end_time(self, value):
         length = value - self.start_time

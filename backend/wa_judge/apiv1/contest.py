@@ -7,10 +7,9 @@ from marshmallow import ValidationError
 from werkzeug.exceptions import BadRequestKeyError
 
 from .. import db, ma
-from ..models import Contest, Submission, UserRole
+from ..models import Contest, Submission, User, UserRole
 from ..utils.decorators import get_args, need_roles
-from ..utils.errors import (forbidden, not_found, unauthorized,
-                            bad_request)
+from ..utils.errors import bad_request, forbidden, not_found, unauthorized
 from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
 from .auth import auth
 
@@ -43,7 +42,7 @@ class ContestApi(Resource):
                 error_out=False)
             contests = pagination.items
             return {
-                'contests': self.contest_schema.dump(contests, many=True).data,
+                'data': self.contest_schema.dump(contests, many=True).data,
                 'has_prev': pagination.has_prev,
                 'has_next': pagination.has_next,
                 'count': pagination.total
@@ -83,7 +82,7 @@ class ContestApi(Resource):
         if contest.owner_user_id != g.current_user.id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')
         json_data = request.get_json()
-        if json_data is None:
+        if json_data is None or not isinstance(json_data, dict):
             return bad_request('empty input')
         contest_json = self.contest_schema.dump(contest).data
         for key, value in json_data.items():
@@ -99,6 +98,89 @@ class ContestApi(Resource):
         data = self.contest_schema.dump(contest).data
         data['have_problem_set'] = contest.problem_set_filename is not None
         return data
+
+
+class ContestantApi(Resource):
+    from .auth import UserSchema
+    user_schema = UserSchema()
+
+    def add_contestants(self, contest, uid_list):
+        errors = []
+        data = []
+        for uid in uid_list:
+            if not isinstance(uid, int):
+                errors.append('%s not a int' % str(uid))
+                continue
+            user = User.query.filter_by(id=uid).first()
+            if not user:
+                errors.append('uid %d not found' % uid)
+                continue
+            if user in contest.contestants:
+                errors.append(
+                    'uid %d have been added in contestant list' % uid)
+                continue
+            contest.contestants.append(user)
+            data.append(uid)
+        db.session.add(contest)
+        db.session.commit()
+        return errors, data
+
+    @get_args('contest_id')
+    def get(self, contest_id):
+        contest = Contest.query.filter_by(id=contest_id).first()
+        if contest is None:
+            return not_found('contest not found.')
+        return {
+            'data': self.user_schema.dump(contest.contestants, many=True).data,
+        }
+
+    @get_args('contest_id')
+    def post(self, contest_id):
+        json_data = request.get_json()
+        contest = Contest.query.filter_by(id=contest_id).first()
+        if contest is None:
+            return not_found('contest not found.')
+        if json_data is None:
+            return bad_request('empty input')
+        if not isinstance(json_data, list):
+            return bad_request('must a list')
+        errors, data = self.add_contestants(contest, json_data)
+        return {'errors': errors, 'data': data}
+
+    @get_args('contest_id')
+    def put(self, contest_id):
+        contest = Contest.query.filter_by(id=contest_id).first()
+        if contest is None:
+            return not_found('contest not found.')
+        contest.contestants.clear()
+        return self.post(contest_id=contest_id)
+
+    @get_args('contest_id')
+    def delete(self, contest_id):
+        json_data = request.get_json()
+        contest = Contest.query.filter_by(id=contest_id).first()
+        if contest is None:
+            return not_found('contest not found.')
+        if json_data is None:
+            return bad_request('empty input')
+        if not isinstance(json_data, list):
+            return bad_request('must a list')
+        errors = []
+        data = []
+        for uid in json_data:
+            if not isinstance(uid, int):
+                errors.append('%s not a int' % str(uid))
+                continue
+            try:
+                user = User.query.filter_by(id=uid).first()
+                contest.contestants.remove(user)
+            except ValueError:
+                errors.append('%s not in contestant list' % str(uid))
+                continue
+            data.append(uid)
+        db.session.add(contest)
+        db.session.commit()
+        return {'errors': errors, 'data': data}
 
 
 class ContestProblemSetApi(Resource):

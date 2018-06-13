@@ -184,7 +184,8 @@ class ContestTestCase(unittest.TestCase):
                          headers=auth_headers(self.token1), json=datas)
             self.assertEqual(res.status_code, 200)
 
-            res = c.get('/apiv1/submissions/1', headers=auth_headers(self.token1))
+            res = c.get('/apiv1/submissions/1',
+                        headers=auth_headers(self.token1))
             self.assertEqual(res.status_code, 200)
 
             res = c.get('/apiv1/submissions/1/submission_file',
@@ -216,3 +217,42 @@ class ContestTestCase(unittest.TestCase):
             self.assertEqual(res.status_code, 200)
             self.assertIsNotNone(res.headers.get('Content-Disposition', None))
             self.assertEqual(res.data, test_msg2)
+
+    def test_conteatant(self):
+        users = []
+        for i in range(1, 21):
+            u = User(username=str(i), password='wawawa')
+            db.session.add(u)
+            users.append(u)
+        db.session.commit()
+        uids = [u.id for u in users]
+        with self.app.test_client() as c:
+            res = c.put('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
+                        json=uids[:10])
+            self.assertEqual(res.status_code, 200)
+            json_data = res.get_json()
+            self.assertEqual(len(json_data['data']), 10)
+
+            a_list = uids[5:15]
+            a_list.append(114514)
+
+            res = c.post('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
+                         json=a_list)
+            self.assertEqual(res.status_code, 200)
+            json_data = res.get_json()
+            self.assertEqual(len(json_data['data']), 5)
+            self.assertEqual(len(json_data['errors']), 6)
+
+            b_list = uids[10:20]
+            b_list.append(114514)
+
+            res = c.delete('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
+                           json=b_list)
+            self.assertEqual(res.status_code, 200)
+            json_data = res.get_json()
+            self.assertEqual(len(json_data['data']), 5)
+            self.assertEqual(len(json_data['errors']), 6)
+
+            res = c.get('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1))
+            json_data = res.get_json()
+            self.assertEqual(len(json_data['data']), 10)
