@@ -24,7 +24,7 @@ class ContestSchema(ma.ModelSchema):
         model_converter = ExtendModelConverter
         strict = True
         fields = ('id', 'name', 'create_time', 'start_time', 'end_time',
-                  'length', 'permission', 'owner_user', 'submissions')
+                  'length', 'permission', 'owner_user', 'submissions', 'announcement')
 
 
 class ContestApi(Resource):

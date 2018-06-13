@@ -110,6 +110,7 @@ class Contest(db.Model):
     owner_user = db.relationship('User', back_populates='own_contests')
     problem_set_filename = db.Column(db.String(64))
     submissions = db.relationship('Submission', back_populates='contest')
+    announcement = db.Column(db.Text)
     contestants = association_proxy(
         'contest_users', 'user', creator=lambda x: UserContest(user=x))
     contest_users = db.relationship(
