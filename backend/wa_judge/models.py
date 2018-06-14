@@ -111,6 +111,7 @@ class Contest(db.Model):
     problem_set_filename = db.Column(db.String(64))
     submissions = db.relationship('Submission', back_populates='contest')
     announcement = db.Column(db.Text)
+    is_ip_check = db.Column(db.Boolean, nullable=False, default=False)
     contestants = association_proxy(
         'contest_users', 'user', creator=lambda x: UserContest(user=x))
     contest_users = db.relationship(

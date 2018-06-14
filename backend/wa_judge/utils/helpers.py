@@ -1,6 +1,9 @@
 import random
 from datetime import datetime
+from socket import error as socket_error
+from socket import inet_aton
 
+from flask import request
 from flask_uploads import UploadSet as _UploadSet
 from flask_uploads import UploadNotAllowed, send_from_directory
 from marshmallow_enum import EnumField
@@ -91,3 +94,17 @@ class ExtendModelConverter(ModelConverter):
                 field_kwargs['validate'].clear()
                 return EnumField(column.type.enum_class, **field_kwargs)
         return super(ExtendModelConverter, self).property2field(prop, instance, field_class, **kwargs)
+
+
+def get_ip():
+    if not request.headers.getlist("X-Forwarded-For"):
+        ip = request.remote_addr
+    else:
+        ip = request.headers.getlist("X-Forwarded-For")[0]
+        try:
+            inet_aton(ip)
+            # legal
+        except socket_error:
+            # Not legal
+            ip = request.remote_addr
+    return ip

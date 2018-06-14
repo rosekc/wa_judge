@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequestKeyError
 
 from .. import db, ma
 from ..models import Contest, Submission, User, UserRole
-from ..utils.decorators import get_args, need_roles
+from ..utils.decorators import check_contest_auth, get_args, need_roles
 from ..utils.errors import bad_request, forbidden, not_found, unauthorized
 from ..utils.helpers import ExtendModelConverter, UploadSet, get_and_save_file
 from .auth import auth
@@ -23,14 +23,15 @@ class ContestSchema(ma.ModelSchema):
         model = Contest
         model_converter = ExtendModelConverter
         strict = True
-        fields = ('id', 'name', 'create_time', 'start_time', 'end_time',
-                  'length', 'permission', 'owner_user', 'submissions', 'announcement')
+        fields = ('id', 'name', 'create_time', 'start_time', 'end_time', 'is_ip_check',
+                  'length', 'permission', 'owner_user', 'announcement')
 
 
 class ContestApi(Resource):
     method_decorators = [auth.login_required]
     contest_schema = ContestSchema()
-    can_modify = ('start_time', 'length', 'permission', 'name')
+    can_modify = ('start_time', 'length', 'permission',
+                  'name', 'is_ip_check', 'announcement')
 
     @get_args('contest_id', 'page', required=False)
     def get(self, contest_id=None, page=None):
@@ -51,9 +52,6 @@ class ContestApi(Resource):
         if contest is None:
             return not_found('contest not found.')
         data = self.contest_schema.dump(contest).data
-        if g.current_user.id != contest.owner_user_id\
-                or not contest.is_started():
-            del data['submissions']
         if g.current_user.id == contest.owner_user_id or contest.is_started():
             data['have_problem_set'] = contest.problem_set_filename is not None
         return data
@@ -103,6 +101,7 @@ class ContestApi(Resource):
 class ContestantApi(Resource):
     from .auth import UserSchema
     user_schema = UserSchema()
+    method_decorators = [check_contest_auth, auth.login_required]
 
     def add_contestants(self, contest, uid_list):
         errors = []
@@ -125,21 +124,13 @@ class ContestantApi(Resource):
         db.session.commit()
         return errors, data
 
-    @get_args('contest_id')
-    def get(self, contest_id):
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None:
-            return not_found('contest not found.')
+    def get(self, contest):
         return {
             'data': self.user_schema.dump(contest.contestants, many=True).data,
         }
 
-    @get_args('contest_id')
-    def post(self, contest_id):
+    def post(self, contest):
         json_data = request.get_json()
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None:
-            return not_found('contest not found.')
         if json_data is None:
             return bad_request('empty input')
         if not isinstance(json_data, list):
@@ -147,20 +138,12 @@ class ContestantApi(Resource):
         errors, data = self.add_contestants(contest, json_data)
         return {'errors': errors, 'data': data}
 
-    @get_args('contest_id')
-    def put(self, contest_id):
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None:
-            return not_found('contest not found.')
+    def put(self, contest):
         contest.contestants.clear()
-        return self.post(contest_id=contest_id)
+        return self.post(contest=contest)
 
-    @get_args('contest_id')
-    def delete(self, contest_id):
+    def delete(self, contest):
         json_data = request.get_json()
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None:
-            return not_found('contest not found.')
         if json_data is None:
             return bad_request('empty input')
         if not isinstance(json_data, list):
@@ -184,31 +167,23 @@ class ContestantApi(Resource):
 
 
 class ContestProblemSetApi(Resource):
-    method_decorators = [auth.login_required]
+    method_decorators = [check_contest_auth, auth.login_required]
 
-    @get_args('contest_id')
-    def get(self, contest_id):
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None or contest.problem_set_filename is None:
+    def get(self, contest):
+        if contest.problem_set_filename is None:
             return not_found()
         if g.current_user.id != contest.owner_user_id and not contest.is_started():
             return forbidden('contest have not started.')
         return problem_sets.send_file(contest.problem_set_filename, as_attachment=True)
 
-    @get_args('contest_id')
-    def put(self, contest_id):
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None:
-            return not_found()
+    def put(self, contest):
         if g.current_user.id != contest.owner_user_id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')
         return get_and_save_file(request.files['problem_set'], contest.name,
                                  contest, 'problem_set_filename', problem_sets)
 
-    @get_args('contest_id')
-    def delete(self, contest_id):
-        contest = Contest.query.filter_by(id=contest_id).first()
-        if contest is None or contest.problem_set_filename is None:
+    def delete(self, contest):
+        if contest.problem_set_filename is None:
             return not_found()
         if g.current_user.id != contest.owner_user_id and g.current_user.role != UserRole.ADMIN:
             return unauthorized('not owner of this contest')

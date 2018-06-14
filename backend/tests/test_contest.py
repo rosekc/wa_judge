@@ -40,10 +40,10 @@ class ContestTestCase(unittest.TestCase):
         self.token3 = u3.generate_auth_token(3600)
         db.session.add(Contest(name='WA Judge Contest Round 1',
                                start_time=datetime.utcnow(), owner_user=u1,
-                               permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
+                               permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600), is_ip_check=True))
         db.session.add(Contest(name='WA Judge Contest Round 2',
                                start_time=datetime.utcnow(), owner_user=u2,
-                               permission=ContestPermission.PRIVATE, length=timedelta(seconds=3600)))
+                               permission=ContestPermission.PUBLIC, length=timedelta(seconds=3600)))
         db.session.commit()
 
     def tearDown(self):
@@ -154,12 +154,6 @@ class ContestTestCase(unittest.TestCase):
             json_data = res.get_json()
             self.assertIsNotNone(json_data.get('have_problem_set'), True)
 
-            res = c.get('/apiv1/contests/1/problem_set',
-                        headers=auth_headers(self.token2))
-            self.assertEqual(res.status_code, 200)
-            self.assertIsNotNone(res.headers.get('Content-Disposition', None))
-            self.assertEqual(res.data, test_msg)
-
             res = c.delete('/apiv1/contests/1/problem_set',
                            headers=auth_headers(self.token2))
             self.assertEqual(res.status_code, 401)
@@ -253,6 +247,52 @@ class ContestTestCase(unittest.TestCase):
             self.assertEqual(len(json_data['data']), 5)
             self.assertEqual(len(json_data['errors']), 6)
 
-            res = c.get('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1))
+            res = c.get('/apiv1/contests/1/contestants/',
+                        headers=auth_headers(self.token1))
             json_data = res.get_json()
             self.assertEqual(len(json_data['data']), 10)
+
+    def test_contest_auth(self):
+        with self.app.test_client() as c:
+            test_msg = b'todokanaikoi'
+            res = c.put('/apiv1/contests/1/problem_set', headers=auth_headers(self.token1), data={
+                'problem_set': (io.BytesIO(test_msg), 'test.txt')
+            })
+            u = User(username='kazusa_touma', password='wawawa')
+            db.session.add(u)
+            db.session.commit()
+            t = u.generate_auth_token(3600)
+            res = c.get('/apiv1/contests/1/problem_set',
+                        headers=auth_headers(t))
+            self.assertEqual(res.status_code, 401)
+            self.assertEqual(res.json['error'],
+                             'user have not been in this contest')
+            res = c.put('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
+                        json=[u.id])
+
+            res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
+                        environ_base={'REMOTE_ADDR': '192.168.5.26'})
+            self.assertEqual(res.status_code, 200)
+            self.assertIsNotNone(res.headers.get('Content-Disposition', None))
+            self.assertEqual(res.data, test_msg)
+
+            res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
+                        environ_base={'REMOTE_ADDR': '192.168.2.14'})
+            self.assertEqual(res.status_code, 401)
+            self.assertEqual(res.json['error'], 'do not change request ip orz')
+
+            res = c.put('/apiv1/contests/1',
+                        headers=auth_headers(self.token1), json={'is_ip_check': False})
+            self.assertEqual(res.status_code, 200)
+            res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
+                        environ_base={'REMOTE_ADDR': '192.168.2.14'})
+            self.assertEqual(res.status_code, 200)
+            self.assertIsNotNone(res.headers.get('Content-Disposition', None))
+            self.assertEqual(res.data, test_msg)
+
+            res = c.put('/apiv1/contests/1', headers=auth_headers(self.token1),
+                        json={'start_time': (datetime.utcnow() + timedelta(seconds=2)).isoformat()})
+            self.assertEqual(res.status_code, 200)
+            res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
+                        environ_base={'REMOTE_ADDR': '192.168.5.26'})
+            self.assertEqual(res.status_code, 403)
