@@ -87,10 +87,10 @@ def init_db():
 
 @app.cli.command()
 def gen_test_db():
-    from .models import User, Contest, ContestPermission
+    from .models import User, Contest, ContestPermission, UserRole
     from datetime import datetime, timedelta
     db.create_all()
-    u1 = User(username='wawawa', password='wawawa')
+    u1 = User(username='wawawa', password='wawawa', role=UserRole.ADMIN)
     u2 = User(username='wawa', password='wawa')
     db.session.add(u1)
     db.session.add(u2)
