@@ -219,16 +219,16 @@ class ContestTestCase(unittest.TestCase):
             db.session.add(u)
             users.append(u)
         db.session.commit()
-        uids = [u.id for u in users]
+        usernames = [u.username for u in users]
         with self.app.test_client() as c:
             res = c.put('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
-                        json=uids[:10])
+                        json=usernames[:10])
             self.assertEqual(res.status_code, 200)
             json_data = res.get_json()
             self.assertEqual(len(json_data['data']), 10)
 
-            a_list = uids[5:15]
-            a_list.append(114514)
+            a_list = usernames[5:15]
+            a_list.append('114514')
 
             res = c.post('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
                          json=a_list)
@@ -237,8 +237,8 @@ class ContestTestCase(unittest.TestCase):
             self.assertEqual(len(json_data['data']), 5)
             self.assertEqual(len(json_data['errors']), 6)
 
-            b_list = uids[10:20]
-            b_list.append(114514)
+            b_list = usernames[10:20]
+            b_list.append('114514')
 
             res = c.delete('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
                            json=b_list)
@@ -268,7 +268,7 @@ class ContestTestCase(unittest.TestCase):
             self.assertEqual(res.json['error'],
                              'user have not been in this contest')
             res = c.put('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
-                        json=[u.id])
+                        json=[u.username])
 
             res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
                         environ_base={'REMOTE_ADDR': '192.168.5.26'})

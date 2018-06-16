@@ -103,23 +103,20 @@ class ContestantApi(Resource):
     user_schema = UserSchema()
     method_decorators = [check_contest_auth, auth.login_required]
 
-    def add_contestants(self, contest, uid_list):
+    def add_contestants(self, contest, username_list):
         errors = []
         data = []
-        for uid in uid_list:
-            if not isinstance(uid, int):
-                errors.append('%s not a int' % str(uid))
-                continue
-            user = User.query.filter_by(id=uid).first()
+        for username in username_list:
+            user = User.query.filter_by(username=username).first()
             if not user:
-                errors.append('uid %d not found' % uid)
+                errors.append('user %s not found' % username)
                 continue
             if user in contest.contestants:
                 errors.append(
-                    'uid %d have been added in contestant list' % uid)
+                    'user %s have been added in contestant list' % username)
                 continue
             contest.contestants.append(user)
-            data.append(uid)
+            data.append(username)
         db.session.add(contest)
         db.session.commit()
         return errors, data
@@ -150,17 +147,14 @@ class ContestantApi(Resource):
             return bad_request('must a list')
         errors = []
         data = []
-        for uid in json_data:
-            if not isinstance(uid, int):
-                errors.append('%s not a int' % str(uid))
-                continue
+        for username in json_data:
             try:
-                user = User.query.filter_by(id=uid).first()
+                user = User.query.filter_by(username=username).first()
                 contest.contestants.remove(user)
             except ValueError:
-                errors.append('%s not in contestant list' % str(uid))
+                errors.append('%s not in contestant list' % username)
                 continue
-            data.append(uid)
+            data.append(username)
         db.session.add(contest)
         db.session.commit()
         return {'errors': errors, 'data': data}

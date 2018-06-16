@@ -24,7 +24,7 @@ POST为增加，PUT为整个表置换，DELETE为删除。
 参数
 -------------
 
-为一个包含用户id的list。
+为一个包含用户username的list。
 
 返回示例
 -----------
@@ -37,7 +37,7 @@ POST为增加，PUT为整个表置换，DELETE为删除。
             "uid 3 not found"
         ],
         "data": [
-            2
+            "2"
         ]
     }
 
