@@ -12,9 +12,8 @@ db = SQLAlchemy()
 ma = Marshmallow()
 
 
-def create_app(config_name='development', test_config=None):
+def create_app(config_name=None, test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object(config[config_name])
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -22,6 +21,10 @@ def create_app(config_name='development', test_config=None):
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
+
+    if config_name is None:
+        config_name = app.config.get('CONFIG_NAME', 'development')
+    app.config.from_object(config[config_name])
 
     # ensure the instance folder exists
     try:
@@ -68,8 +71,8 @@ def uploaded_file(setname, filename):
 
 @app.shell_context_processor
 def make_shell_context():
-    from .models import User, Contest
-    return dict(db=db, User=User, Contest=Contest)
+    from .models import User, Contest, Submission
+    return dict(db=db, User=User, Contest=Contest, Submission=Submission)
 
 
 @app.cli.command()
