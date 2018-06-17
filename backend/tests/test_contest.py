@@ -169,14 +169,14 @@ class ContestTestCase(unittest.TestCase):
             res = c.get('/apiv1/submissions/1',
                         headers=auth_headers(self.token1))
             self.assertEqual(res.status_code, 404)
-            datas = {
-                'author_id': 1,
-                'contest_id': 1,
-            }
 
             res = c.post('/apiv1/submissions/',
-                         headers=auth_headers(self.token1), json=datas)
+                         headers=auth_headers(self.token1), json={'contest_id': 1})
             self.assertEqual(res.status_code, 200)
+
+            res = c.post('/apiv1/submissions/',
+                         headers=auth_headers(self.token1), json={'contest_id': 233333})
+            self.assertEqual(res.status_code, 404)
 
             res = c.get('/apiv1/submissions/1',
                         headers=auth_headers(self.token1))

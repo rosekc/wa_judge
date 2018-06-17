@@ -194,7 +194,7 @@ class SubmissionSchema(ma.ModelSchema):
     class Meta:
         model = Submission
         strict = True
-        fields = ('id', 'author', 'contest', 'submit_time')
+        fields = ('id', 'author_id', 'contest_id', 'submit_time')
 
 
 class SubmissionApi(Resource):
@@ -230,9 +230,16 @@ class SubmissionApi(Resource):
             data = self.submission_schema.load(json_data).data
         except (ValidationError, AttributeError) as err:
             return bad_request(getattr(err, 'messages', 'AttributeError'))
-        data.author = g.current_user
+        data.author_id = g.current_user.id
+        contest = Contest.query.filter_by(id=data.contest_id).first()
+        if contest is None:
+            return not_found('contest not found.')
+        ret = contest.can_get_in()
+        if ret != 'OK':
+            return ret
         db.session.add(data)
         db.session.commit()
+        return self.submission_schema.dump(data)
 
 
 class SubmissionFileApi(Resource):
