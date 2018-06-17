@@ -1,12 +1,14 @@
 import enum
 from datetime import datetime, timedelta
 
-from flask import current_app
+from flask import current_app, g
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.ext.associationproxy import association_proxy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
+from .utils.errors import forbidden, unauthorized
+from .utils.helpers import get_ip
 
 
 class UserRole(enum.Enum):
@@ -139,6 +141,26 @@ class Contest(db.Model):
     def is_started(self):
         current_time = datetime.utcnow()
         return current_time >= self.start_time
+
+    def can_get_in(self):
+        if self.owner_user_id == g.current_user.id or g.current_user.role == UserRole.ADMIN:
+            return 'OK'
+        if self.is_running():
+            if self.permission == ContestPermission.PUBLIC:
+                return 'OK'
+            uc = UserContest.query.filter_by(
+                user_id=g.current_user.id, contest_id=self.id).first()
+            if not uc:
+                return unauthorized('user have not been in this contest')
+            if not uc.last_ip:
+                uc.last_ip = get_ip()
+                db.session.add(uc)
+                db.session.commit()
+            elif self.is_ip_check and uc.last_ip != get_ip():
+                return unauthorized('do not change request ip orz')
+        else:
+            return forbidden('contest is not running')
+        return 'OK'
 
 
 class Submission(db.Model):
