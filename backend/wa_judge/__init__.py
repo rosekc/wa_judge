@@ -26,6 +26,17 @@ def create_app(config_name=None, test_config=None):
         config_name = app.config.get('CONFIG_NAME', 'development')
     app.config.from_object(config[config_name])
 
+    # 为sqlite加上外键验证
+    if app.config.get('SQLALCHEMY_DATABASE_URI').startswith('sqlite:///'):
+        from sqlalchemy.engine import Engine
+        from sqlalchemy import event
+
+        @event.listens_for(Engine, "connect")
+        def set_sqlite_pragma(dbapi_connection, connection_record):
+            cursor = dbapi_connection.cursor()
+            cursor.execute("PRAGMA foreign_keys=ON")
+            cursor.close()
+
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
