@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_uploads import configure_uploads, send_from_directory
+from flask_cors import CORS
 
 from .config import config
 
@@ -68,6 +69,8 @@ def create_app(config_name=None, test_config=None):
     from .apiv1.contest import problem_sets, submission_files
     configure_uploads(app, problem_sets)
     configure_uploads(app, submission_files)
+
+    CORS(app, supports_credentials=True)
 
     return app
 
