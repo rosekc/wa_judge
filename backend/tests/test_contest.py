@@ -265,7 +265,7 @@ class ContestTestCase(unittest.TestCase):
             res = c.get('/apiv1/contests/1/problem_set',
                         headers=auth_headers(t))
             self.assertEqual(res.status_code, 401)
-            self.assertEqual(res.json['error'],
+            self.assertEqual(res.json['message'],
                              'user have not been in this contest')
             res = c.put('/apiv1/contests/1/contestants/', headers=auth_headers(self.token1),
                         json=[u.username])
@@ -279,7 +279,7 @@ class ContestTestCase(unittest.TestCase):
             res = c.get('/apiv1/contests/1/problem_set', headers=auth_headers(t),
                         environ_base={'REMOTE_ADDR': '192.168.2.14'})
             self.assertEqual(res.status_code, 401)
-            self.assertEqual(res.json['error'], 'do not change request ip orz')
+            self.assertEqual(res.json['message'], 'do not change request ip orz')
 
             res = c.put('/apiv1/contests/1',
                         headers=auth_headers(self.token1), json={'is_ip_check': False})
