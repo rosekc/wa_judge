@@ -9,6 +9,7 @@ from ..models import User
 from ..utils.decorators import get_args
 from ..utils.errors import (conflict, not_found, unauthorized,
                             bad_request)
+from ..utils.helpers import ExtendModelConverter
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
@@ -51,14 +52,15 @@ class TokenApi(Resource):
             return bad_request('miss some field')
         user = User.query.filter_by(username=username).first()
         if user and user.verify_password(password):
-            return {'token': user.generate_auth_token(3600)}
+            return {'token': user.generate_auth_token(3600), 'user_id': user.id}
         return unauthorized('username or password is wrong')
 
 
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
-        fields = ('id', 'username', 'last_seen', 'member_since', 'password')
+        model_converter = ExtendModelConverter
+        fields = ('id', 'username', 'last_seen', 'member_since', 'password', 'role')
         load_only = ('password')
         dump_only = ('id')
     password = fields.Str()
